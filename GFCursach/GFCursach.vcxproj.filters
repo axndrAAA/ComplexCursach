@@ -13,18 +13,72 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Headerdateien\Satellites">
+      <UniqueIdentifier>{1bfa95b9-b535-4f2d-9fef-f664fb87ce27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\IntegratorAndGenModels">
+      <UniqueIdentifier>{2ccb88ca-a5e9-44d5-8147-71e1177189d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Form">
+      <UniqueIdentifier>{305d69c2-f319-4c31-843a-e6b6b35018da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\IntegratorAndGenModels">
+      <UniqueIdentifier>{c512e406-fb66-45bd-b148-8c023d478760}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Satellites">
+      <UniqueIdentifier>{b2443004-9723-4263-9bbc-0d3dbe286b6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Form">
+      <UniqueIdentifier>{72294cca-c050-436c-847b-ebd49208d3c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\CalmanFilter">
+      <UniqueIdentifier>{6aff2ba9-4250-4bdf-8e29-ce831f4f5907}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\CalmanFilter">
+      <UniqueIdentifier>{502125a3-d885-4016-acc7-308440d05594}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
+    <Text Include="out.txt">
+      <Filter>Ressourcendateien</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h">
+    <ClInclude Include="Form1.h">
       <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix_classes.h">
+      <Filter>Headerdateien\IntegratorAndGenModels</Filter>
+    </ClInclude>
+    <ClInclude Include="TQuaternion.h">
+      <Filter>Headerdateien\IntegratorAndGenModels</Filter>
+    </ClInclude>
+    <ClInclude Include="TModel.h">
+      <Filter>Headerdateien\IntegratorAndGenModels</Filter>
+    </ClInclude>
+    <ClInclude Include="TIntegrator.h">
+      <Filter>Headerdateien\IntegratorAndGenModels</Filter>
+    </ClInclude>
+    <ClInclude Include="Satelite.h">
+      <Filter>Headerdateien\Satellites</Filter>
+    </ClInclude>
+    <ClInclude Include="NavSatellite.h">
+      <Filter>Headerdateien\Satellites</Filter>
+    </ClInclude>
+    <ClInclude Include="UsrSatellite.h">
+      <Filter>Headerdateien\Satellites</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneralProcessModel.h">
+      <Filter>Headerdateien\IntegratorAndGenModels</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>Headerdateien</Filter>
+      <Filter>Headerdateien\Form</Filter>
     </ClInclude>
-    <ClInclude Include="Form1.h">
+    <ClInclude Include="stdafx.h">
+      <Filter>Headerdateien\Form</Filter>
+    </ClInclude>
+    <ClInclude Include="CalmanFilter.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
@@ -34,16 +88,46 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CppCLR_WinformsProjekt.cpp">
-      <Filter>Quelldateien</Filter>
+    <ClCompile Include="GeneralProcessModel.cpp">
+      <Filter>Quelldateien\IntegratorAndGenModels</Filter>
+    </ClCompile>
+    <ClCompile Include="TIntegrator.cpp">
+      <Filter>Quelldateien\IntegratorAndGenModels</Filter>
+    </ClCompile>
+    <ClCompile Include="TMatrix_class.cpp">
+      <Filter>Quelldateien\IntegratorAndGenModels</Filter>
+    </ClCompile>
+    <ClCompile Include="TModel.cpp">
+      <Filter>Quelldateien\IntegratorAndGenModels</Filter>
+    </ClCompile>
+    <ClCompile Include="TQuaternion.cpp">
+      <Filter>Quelldateien\IntegratorAndGenModels</Filter>
+    </ClCompile>
+    <ClCompile Include="TVector_class.cpp">
+      <Filter>Quelldateien\IntegratorAndGenModels</Filter>
+    </ClCompile>
+    <ClCompile Include="NavSatellite.cpp">
+      <Filter>Quelldateien\Satellites</Filter>
+    </ClCompile>
+    <ClCompile Include="Satelite.cpp">
+      <Filter>Quelldateien\Satellites</Filter>
+    </ClCompile>
+    <ClCompile Include="UsrSatellite.cpp">
+      <Filter>Quelldateien\Satellites</Filter>
     </ClCompile>
     <ClCompile Include="AssemblyInfo.cpp">
-      <Filter>Quelldateien</Filter>
+      <Filter>Quelldateien\Form</Filter>
     </ClCompile>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Quelldateien</Filter>
+    <ClCompile Include="CppCLR_WinformsProjekt.cpp">
+      <Filter>Quelldateien\Form</Filter>
     </ClCompile>
     <ClCompile Include="Form1.cpp">
+      <Filter>Quelldateien\Form</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Quelldateien\Form</Filter>
+    </ClCompile>
+    <ClCompile Include="CalmanFilter.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

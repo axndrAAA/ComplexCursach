@@ -143,31 +143,56 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="out.txt" />
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CalmanFilter.h" />
     <ClInclude Include="Form1.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="GeneralProcessModel.h" />
+    <ClInclude Include="Matrix_classes.h" />
+    <ClInclude Include="NavSatellite.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Satelite.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TIntegrator.h" />
+    <ClInclude Include="TModel.h" />
+    <ClInclude Include="TQuaternion.h" />
+    <ClInclude Include="UsrSatellite.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="CalmanFilter.cpp" />
     <ClCompile Include="CppCLR_WinformsProjekt.cpp" />
     <ClCompile Include="Form1.cpp" />
+    <ClCompile Include="GeneralProcessModel.cpp" />
+    <ClCompile Include="NavSatellite.cpp" />
+    <ClCompile Include="Satelite.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TIntegrator.cpp" />
+    <ClCompile Include="TMatrix_class.cpp" />
+    <ClCompile Include="TModel.cpp" />
+    <ClCompile Include="TQuaternion.cpp" />
+    <ClCompile Include="TVector_class.cpp" />
+    <ClCompile Include="UsrSatellite.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.h</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
