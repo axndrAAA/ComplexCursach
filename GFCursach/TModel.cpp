@@ -22,11 +22,23 @@ TModel::TModel(double _T0, double _T1, double _smplinc)
 
 void TModel::AddResult(TVector & vect, double t)
 {
+
+
+	TVector v(vect.getSize() + 1);
+	for (int i = 0; i < vect.getSize(); i++)
+	{
+		v[i] = vect[i];
+	}
+	v[v.getSize() - 1] = t;
+
+	Result.push_back(v);
+
+	/*
 	Result[iterat][0] = t;
 	for (int i = 1; i < count_of_ur + 1; i++) {
 		Result[iterat][i] = vect[i - 1];
 	}	 
-	iterat++;
+	iterat++;*/
 }
 
 int TModel::getCountOfUr()
@@ -66,7 +78,7 @@ int TModel::getResultsize()
 
 void TModel::PreStop()
 {
-	Result.setSize(iterat, count_of_ur + 1);
+	//Result.setSize(iterat, count_of_ur + 1);
 
 	result_size = iterat;
 }
@@ -95,7 +107,7 @@ TArenstorfModel::TArenstorfModel(double _t0, double _T1, double _smplinc):TModel
 {
 	count_of_ur = 4;
 	//
-	Result.setSize(result_size, count_of_ur);
+	//Result.setSize(result_size, count_of_ur);
 	//
 	TVector _x0(count_of_ur);
 	_x0[0] = 0.994;
@@ -125,7 +137,7 @@ TSunClockModel::TSunClockModel(double _T0, double _T1, double _smplinc, bool _Da
 	count_of_ur = 6;
 	//
 	if (!DayLongMode) {
-		Result.setSize(result_size, count_of_ur + 1);
+		//Result.setSize(result_size, count_of_ur + 1);
 		Result_sh.setSize(result_size, 4);
 	}
 		

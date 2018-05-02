@@ -34,6 +34,8 @@ int TVector::getMinSize(TVector a, TVector b)const {
 	else return a.size;
 }
 
+
+
 TQuaternion TVector::operator*(const TQuaternion &_quat)
 {
 	TVector this_vect_copy(3);

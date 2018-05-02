@@ -1,11 +1,12 @@
 #pragma once
+#include <string>
 //раздебажено
 class TMatrix;
 class TQuaternion;
 class TVector {
 private:
 	int size;
-	double *vector;
+	double* vector;
 
 public:	class IncorrectIndexException {};
 		class IncorrectSizeException {};
@@ -31,6 +32,7 @@ public:	 TVector(int);
 		 void setElement(int, double) throw(IncorrectIndexException);
 		 void setLenght(int) throw(IncorrectIndexException);
 		 int getMinSize(TVector, TVector)const;
+
 
 		 //TQuaternion
 		 TQuaternion operator*(const TQuaternion&);

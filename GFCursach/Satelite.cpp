@@ -62,17 +62,18 @@ TVector Satellite::OsculToGeo(double Theta, double omega, double OMEGA, double i
 	return ret;
 }
 
-TVector * Satellite::getRight(const TVector & arg_v, double _t, TVector & k_i)
+TVector Satellite::getRHS(const TVector & arg_v, double _t)
 {
+	TVector ret(6);
 	double r = sqrt(pow(arg_v[0], 2)+ pow(arg_v[1], 2)+ pow(arg_v[2], 2));
-	k_i[0] = arg_v[3];
-	k_i[1] = arg_v[4];
-	k_i[2] = arg_v[5];
-	k_i[3] = -mu * arg_v[0] / (r*r*r); 
-	k_i[4] = -mu * arg_v[1] / (r*r*r);
-	k_i[5] = -mu * arg_v[2] / (r*r*r);
+	ret[0] = arg_v[3];
+	ret[1] = arg_v[4];
+	ret[2] = arg_v[5];
+	ret[3] = -mu * arg_v[0] / (r*r*r);
+	ret[4] = -mu * arg_v[1] / (r*r*r);
+	ret[5] = -mu * arg_v[2] / (r*r*r);
 
-	return &k_i;
+	return ret;
 }
 
 TVector Satellite::getXcur()
@@ -80,9 +81,19 @@ TVector Satellite::getXcur()
 	return Xcur;
 }
 
-void Satellite::setXcur(const TVector newX)
+void Satellite::setXcur(const TVector& newX)
 {
 	Xcur = TVector(newX);
+}
+
+TVector Satellite::getX0()
+{
+	return X0;
+}
+
+void Satellite::setX0(const TVector newX0)
+{
+	X0 = newX0;
 }
 
 double Satellite::ToRad(double grad)

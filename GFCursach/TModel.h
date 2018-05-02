@@ -1,5 +1,6 @@
 #pragma once
 #include"Matrix_classes.h"
+#include<list>
 class TModel {
 
 protected:
@@ -12,7 +13,8 @@ protected:
 	int iterat = 0;
 	int result_size;
 public:
-	TMatrix Result;
+	//TMatrix Result;
+	std::list<TVector> Result;
 
 	~TModel() {}
 	TModel() {};

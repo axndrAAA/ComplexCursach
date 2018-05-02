@@ -3,10 +3,15 @@
 #include"Satelite.h"
 #include"GLONASSsystem.h"
 #include<vector>
-class GeneralProcessModel: TModel
+class GeneralProcessModel: public TModel
 {
 private:
 	GLONASSsystem GLONASS;
+
+
+
+
+	vector<TVector> getGlonassArgList(const TVector& arg_v);
 public:
 	GeneralProcessModel();
 	GeneralProcessModel(double t0, double t1);
