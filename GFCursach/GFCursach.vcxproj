@@ -152,6 +152,7 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="GeneralProcessModel.h" />
+    <ClInclude Include="GLONASSsystem.h" />
     <ClInclude Include="Matrix_classes.h" />
     <ClInclude Include="NavSatellite.h" />
     <ClInclude Include="resource.h" />
@@ -171,6 +172,7 @@
     <ClCompile Include="CppCLR_WinformsProjekt.cpp" />
     <ClCompile Include="Form1.cpp" />
     <ClCompile Include="GeneralProcessModel.cpp" />
+    <ClCompile Include="GLONASSsystem.cpp" />
     <ClCompile Include="NavSatellite.cpp" />
     <ClCompile Include="Satelite.cpp" />
     <ClCompile Include="stdafx.cpp">

@@ -1,5 +1,6 @@
 #pragma once
 #include"TIntegrator.h"
+#include"GeneralProcessModel.h"
 #include <iostream>
 #include<fstream>
 using namespace std;
@@ -81,9 +82,11 @@ namespace CppCLR_WinformsProjekt {
 	private: System::Void Моделировать_Click(System::Object^  sender, System::EventArgs^  e) {
 		string outFileName = "out.txt";
 		TDormanPrinceIntegrator integr(1e-12);
-
 		double T0 = 0.0;
 		double T1 = 0.0;
+
+		GeneralProcessModel model(T0,T1);
+
 	}
 	};
 }

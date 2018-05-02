@@ -78,8 +78,11 @@
     <ClInclude Include="stdafx.h">
       <Filter>Headerdateien\Form</Filter>
     </ClInclude>
+    <ClInclude Include="GLONASSsystem.h">
+      <Filter>Headerdateien\Satellites</Filter>
+    </ClInclude>
     <ClInclude Include="CalmanFilter.h">
-      <Filter>Headerdateien</Filter>
+      <Filter>Headerdateien\CalmanFilter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -127,13 +130,21 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Quelldateien\Form</Filter>
     </ClCompile>
+    <ClCompile Include="GLONASSsystem.cpp">
+      <Filter>Quelldateien\Satellites</Filter>
+    </ClCompile>
     <ClCompile Include="CalmanFilter.cpp">
-      <Filter>Quelldateien</Filter>
+      <Filter>Headerdateien\CalmanFilter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico">
       <Filter>Ressourcendateien</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Form1.resx">
+      <Filter>Ressourcendateien</Filter>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
