@@ -4,7 +4,7 @@
 class GLONASSsystem
 {
 private:
-
+	double getU(int sat_num);
 
 public:
 	std::vector<NavSatellite> satellites;
@@ -14,8 +14,11 @@ public:
 	const  double T = 11 * 60 * 60 + 15 * 60;//c
 	const int orbNumber = 3;
 	const int satOnOrbNumber = 8;
-	const  double orbMood = Satellite::ToRad(64.8);//оно же i
+	const  double i = Satellite::ToRad(64.8);//наклонение орбиты
 	const  double OMEGAS[3] = { Satellite::ToRad(11 + 15 / 60), Satellite::ToRad(131 + 15 / 60),Satellite::ToRad(251 + 15 / 60) };
+	double omega = Satellite::ToRad(90.0);//аргумент перицентра орбиты[rad]
+	double a = 25420.0 * 1000;// большая полуось[м]
+	double e = 0;//эксцентриситет[rad]
 
 
 

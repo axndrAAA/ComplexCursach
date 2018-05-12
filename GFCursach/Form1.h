@@ -31,7 +31,18 @@ namespace CppCLR_WinformsProjekt {
 			AllocConsole();
 			freopen("CON", "w", stdout);
 		}
+		int FormIncreaseProgressBar()
+		{
+			// Increment the value of the ProgressBar a value of one each time.
+			progressBar1->Increment(1);
 
+			// Display the textual value of the ProgressBar in the StatusBar control's first panel.
+			this->progressBar1->Text = String::Concat(progressBar1->Value, "% Completed");
+
+			if (progressBar1->Value == progressBar1->Maximum)
+				progressBar1->Value = progressBar1->Maximum;
+			return 0;
+		}
 	protected:
 		/// <summary>
 		/// Verwendete Ressourcen bereinigen.
@@ -47,6 +58,7 @@ namespace CppCLR_WinformsProjekt {
 	private: System::Windows::Forms::DataVisualization::Charting::Chart^  XYChart;
 	private: System::Windows::Forms::DataVisualization::Charting::Chart^  XChart;
 	private: System::Windows::Forms::DataVisualization::Charting::Chart^  VChart;
+	private: System::Windows::Forms::ProgressBar^  progressBar1;
 
 
 
@@ -78,6 +90,7 @@ namespace CppCLR_WinformsProjekt {
 			this->XYChart = (gcnew System::Windows::Forms::DataVisualization::Charting::Chart());
 			this->XChart = (gcnew System::Windows::Forms::DataVisualization::Charting::Chart());
 			this->VChart = (gcnew System::Windows::Forms::DataVisualization::Charting::Chart());
+			this->progressBar1 = (gcnew System::Windows::Forms::ProgressBar());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->XYChart))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->XChart))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->VChart))->BeginInit();
@@ -134,11 +147,20 @@ namespace CppCLR_WinformsProjekt {
 			this->VChart->TabIndex = 1;
 			this->VChart->Text = L"chart1";
 			// 
+			// progressBar1
+			// 
+			this->progressBar1->ForeColor = System::Drawing::Color::Lime;
+			this->progressBar1->Location = System::Drawing::Point(489, 442);
+			this->progressBar1->Name = L"progressBar1";
+			this->progressBar1->Size = System::Drawing::Size(454, 23);
+			this->progressBar1->TabIndex = 2;
+			// 
 			// Form1
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(955, 477);
+			this->Controls->Add(this->progressBar1);
 			this->Controls->Add(this->VChart);
 			this->Controls->Add(this->XChart);
 			this->Controls->Add(this->XYChart);
@@ -158,25 +180,55 @@ namespace CppCLR_WinformsProjekt {
 		if (!fout) { cout << "Ошибка открытия файла\n";  system("pause"); }
 		fout.setf(ios::fixed);
 
-		TDormanPrinceIntegrator integr(1e-12);
+		TDormanPrinceIntegrator integr(1e-5);
 		double T0 = 0.0;
-		//double T1 = 11 * 60 * 60 + 15 * 60;
-		double T1 = 150;
+		double T1 = 11 * 60 * 60 + 15 * 60;
+		double smpl_inc = 60.1;
+		//double T1 = 150;
 
-		GeneralProcessModel model(T0,T1);
+		this->progressBar1->Minimum = T0;
+		this->progressBar1->Maximum= T1;
+		this->progressBar1->Step = smpl_inc;
+
+
+		GeneralProcessModel model(T0,T1,smpl_inc);
+		
 		integr.Run(model);
-		for (int i = 0; i < model.Result.size(); i++)
+
+		//печать заголовков для глонаса
+		for (int i = 0; i < model.GLONASS.getSatNumber(); i++)
+			fout << "Xglon" << " " << "Yglon" << " " << "Zglon" << " " << "Vxglon" << " " << "Vyglon" << " " << "Vzglon" << " ";
+		////печать заголовков для GPS
+		//for (int i = 0; i < model.GPS.getSatNumber(); i++)
+		//	fout << "Xgps" << " " << "Ygps" << " " << "Zgps" << " " << "Vxgps" << " " << "Vygps" << " " << "Vzgps" << " ";
+		//печать заголовков для спутника-потребителя
+		fout << "Xcon" << " " << "Ycon" << " " << "Zcon" << " " << "Vxcon" << " " << "Vycon" << " " << "Vzcon" << " " << "t"<<endl;
+
+
+
+		while (!model.Result.empty())
 		{
 			TVector str = model.Result.front();
-			model.Result.pop_front();
 			for (int j = 0; j < str.getSize(); j++)
 			{
 				fout << str[j] << " ";
 			}
 			fout << endl;
+			model.Result.pop_front();
+
 		}
+		//for (int i = 0; i < model.Result.size(); i++)
+		//{
+
+		//}
 		fout.close();
 		
 	}
+
+
+
+
 	};
+
+
 }

@@ -4,11 +4,24 @@
 #include<vector>
 using namespace std;
 
+double GLONASSsystem::getU(int sat_num)
+{
+	double ret = 0.0 + 15*(27 - 3 * sat_num + 25 * ((int)(sat_num - 1) / 8));
+	//TODO
+	return 0.0;
+}
+
 GLONASSsystem::GLONASSsystem()
 {
 	satellites = vector<NavSatellite>(1);
 	
-	satellites[0] = NavSatellite(0, orbMood, OMEGAS[0], Horb);
+
+	//аршумент широты
+	double u = 0;
+
+	//истинная аномалия
+	double Theta = u - omega;
+	satellites[0] = NavSatellite(Theta, omega, OMEGAS[0], i, a, e);
 
 }
 

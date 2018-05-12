@@ -7,24 +7,34 @@ class Satellite
 {
 protected:
 	double mu = 398600.436e9;//геоцентрическа€ гравитационна€ посто€нна€;
-	double a = 29378137.0;//больша€ полуось
-	double e = 0.0;//эксцентриситет
-	double omega = 0;//аргумент перицентра
-	double p = a * (1 - e * e);//фокальный параметр
+
 
 	TVector Xcur;
 	TVector X0;
 
-
-	TVector OsculToGeo(double Theta, double omega, double OMEGA, double i);
-	double getVn(double Theta);
-	double getVr(double Theta);
+	//координаты в оскулирующих элементах
+	//Theta - истнна€ аномали€
+	//omega - аргумент перицентра
+	//OMEGA - долгота восход€щего узла
+	//i - наклонение орбиты
+	//a-больш€ полуось
+	//e - эксцентриситет
+	TVector OsculToGeo(double Theta, double omega, double OMEGA, double i, double a, double e);
+	//double getVn(double Theta);
+	//double getVr(double Theta);
 public:
 	Satellite();
-	Satellite(TVector xo);
-	Satellite(std::vector<double> _x0);
-	Satellite(double Theta, double i, double OMEGA, double H);
-	//Satellite operator = (Satellite &stl);
+	Satellite(TVector xo);//координаты в √— 
+	Satellite(std::vector<double> _x0);//координаты в √— , собранные в std::vector
+
+	//координаты в оскулирующих элементах
+	//Theta - истнна€ аномали€
+	//omega - широта перицентра
+	//OMEGA - долгота восход€щего узла
+	//i - наклонение орбиты
+	//a-больш€ полуось
+	//e - эксцентриситет
+	Satellite(double Theta, double omega, double OMEGA, double i, double a, double e);
 
 	TVector getRHS(const TVector &arg_v, double _t);
 	TVector getXcur();
