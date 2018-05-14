@@ -113,3 +113,9 @@ double Satellite::ToRad(double grad)
 {
 	return grad * M_PI / 180.0;
 }
+
+double Satellite::ToDeg(double rad)
+{
+	double ret = (rad / M_PI)*180.0;
+	return ret;
+}

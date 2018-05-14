@@ -45,5 +45,6 @@ public:
 
 
 	static double ToRad(double grad);
+	static double ToDeg(double rad);
 };
 

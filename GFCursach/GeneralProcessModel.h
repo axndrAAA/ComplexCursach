@@ -7,9 +7,10 @@ class GeneralProcessModel: public TModel
 {
 public:
 	GLONASSsystem GLONASS;
+	Satellite ISZ_consumer;
 
 private:
-	int(*incProgressBar)();
+	int(*incProgressBar)() = nullptr;
 
 	//параматры орбиты ИСЗ-потребителя
 	double Theta = Satellite::ToRad(60);
@@ -22,6 +23,7 @@ private:
 
 
 	vector<TVector> getGlonassArgList(const TVector& arg_v);
+	TVector getISZ_consumerArg(const TVector& arg_v);
 public:
 	GeneralProcessModel();
 	GeneralProcessModel(double t0, double t1,double smlInc);

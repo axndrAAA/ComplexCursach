@@ -16,9 +16,9 @@ public:
 	const int satOnOrbNumber = 8;
 	const  double i = Satellite::ToRad(64.8);//наклонение орбиты
 	const  double OMEGAS[3] = { Satellite::ToRad(11 + 15 / 60), Satellite::ToRad(131 + 15 / 60),Satellite::ToRad(251 + 15 / 60) };
-	double omega = Satellite::ToRad(90.0);//аргумент перицентра орбиты[rad]
+	double omega = Satellite::ToRad(90.0);//аргумент перицентра орбиты[rad]  145.0 + 26.0/60.0+ 27/(3600.0)
 	double a = 25420.0 * 1000;// большая полуось[м]
-	double e = 0;//эксцентриситет[rad]
+	double e = Satellite::ToRad(0);//эксцентриситет[rad]
 
 
 

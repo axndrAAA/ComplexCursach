@@ -6,7 +6,9 @@
 #include<stdio.h>
 #include<Windows.h>
 #include<stdlib.h>
+#include<threadpoolapiset.h>
 using namespace std;
+
 namespace CppCLR_WinformsProjekt {
 
 	using namespace System;
@@ -16,12 +18,15 @@ namespace CppCLR_WinformsProjekt {
 	using namespace System::Data;
 	using namespace System::Drawing;
 
+
+
 	/// <summary>
 	/// Zusammenfassung fьr Form1
 	/// </summary>
 	public ref class Form1 : public System::Windows::Forms::Form
 	{
 	public:
+
 		Form1(void)
 		{
 			InitializeComponent();
@@ -31,10 +36,10 @@ namespace CppCLR_WinformsProjekt {
 			AllocConsole();
 			freopen("CON", "w", stdout);
 		}
-		int FormIncreaseProgressBar()
+		int FormIncreaseProgressBar(int step)
 		{
 			// Increment the value of the ProgressBar a value of one each time.
-			progressBar1->Increment(1);
+			progressBar1->Increment(step);
 
 			// Display the textual value of the ProgressBar in the StatusBar control's first panel.
 			this->progressBar1->Text = String::Concat(progressBar1->Value, "% Completed");
@@ -43,6 +48,8 @@ namespace CppCLR_WinformsProjekt {
 				progressBar1->Value = progressBar1->Maximum;
 			return 0;
 		}
+	System::Windows::Forms::ProgressBar^  progressBar1;
+
 	protected:
 		/// <summary>
 		/// Verwendete Ressourcen bereinigen.
@@ -58,7 +65,7 @@ namespace CppCLR_WinformsProjekt {
 	private: System::Windows::Forms::DataVisualization::Charting::Chart^  XYChart;
 	private: System::Windows::Forms::DataVisualization::Charting::Chart^  XChart;
 	private: System::Windows::Forms::DataVisualization::Charting::Chart^  VChart;
-	private: System::Windows::Forms::ProgressBar^  progressBar1;
+	//private: System::Windows::Forms::ProgressBar^  progressBar1;
 
 
 
@@ -175,6 +182,7 @@ namespace CppCLR_WinformsProjekt {
 		}
 #pragma endregion
 	private: System::Void Моделировать_Click(System::Object^  sender, System::EventArgs^  e) {
+		this->progressBar1->Value = 0;
 		string outFileName = "out.txt";
 		ofstream fout(outFileName, ios_base::out | ios_base::trunc);
 		if (!fout) { cout << "Ошибка открытия файла\n";  system("pause"); }
@@ -183,8 +191,8 @@ namespace CppCLR_WinformsProjekt {
 		TDormanPrinceIntegrator integr(1e-5);
 		double T0 = 0.0;
 		double T1 = 11 * 60 * 60 + 15 * 60;
-		double smpl_inc = 60.1;
-		//double T1 = 150;
+		//T1 = 100.0;
+		double smpl_inc = 60;
 
 		this->progressBar1->Minimum = T0;
 		this->progressBar1->Maximum= T1;
@@ -192,15 +200,16 @@ namespace CppCLR_WinformsProjekt {
 
 
 		GeneralProcessModel model(T0,T1,smpl_inc);
+
 		
 		integr.Run(model);
 
 		//печать заголовков для глонаса
 		for (int i = 0; i < model.GLONASS.getSatNumber(); i++)
-			fout << "Xglon" << " " << "Yglon" << " " << "Zglon" << " " << "Vxglon" << " " << "Vyglon" << " " << "Vzglon" << " ";
+			fout << "Xglon_" <<i<< " " << "Yglon_" << i << " " << "Zglon_" << i << " " << "Vxglon_" << i << " " << "Vyglon_" << i << " " << "Vzglon_" << i << " ";
 		////печать заголовков для GPS
 		//for (int i = 0; i < model.GPS.getSatNumber(); i++)
-		//	fout << "Xgps" << " " << "Ygps" << " " << "Zgps" << " " << "Vxgps" << " " << "Vygps" << " " << "Vzgps" << " ";
+			//fout << "Xgps_" << i << " " << "Ygps_" << i << " " << "Zgps_" << i << " " << "Vxgps_" << i << " " << "Vygps_" << i << " " << "Vzgps_" << i << " ";
 		//печать заголовков для спутника-потребителя
 		fout << "Xcon" << " " << "Ycon" << " " << "Zcon" << " " << "Vxcon" << " " << "Vycon" << " " << "Vzcon" << " " << "t"<<endl;
 
@@ -208,6 +217,7 @@ namespace CppCLR_WinformsProjekt {
 
 		while (!model.Result.empty())
 		{
+			FormIncreaseProgressBar(smpl_inc);
 			TVector str = model.Result.front();
 			for (int j = 0; j < str.getSize(); j++)
 			{
@@ -222,12 +232,9 @@ namespace CppCLR_WinformsProjekt {
 
 		//}
 		fout.close();
+		this->progressBar1->Text = "DONE.";
 		
 	}
-
-
-
-
 	};
 
 
