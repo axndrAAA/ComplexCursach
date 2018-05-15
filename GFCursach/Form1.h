@@ -191,8 +191,8 @@ namespace CppCLR_WinformsProjekt {
 		TDormanPrinceIntegrator integr(1e-5);
 		double T0 = 0.0;
 		double T1 = 11 * 60 * 60 + 15 * 60;
-		//T1 = 100.0;
-		double smpl_inc = 60;
+		T1 = 100.0;
+		double smpl_inc = 0.1;
 
 		this->progressBar1->Minimum = T0;
 		this->progressBar1->Maximum= T1;

@@ -19,7 +19,7 @@ vector<TVector> GeneralProcessModel::getGlonassArgList(const TVector & arg_v)
 		TVector arg_sat_i(6);
 		for (int j = 0; j < arg_sat_i.getSize(); j++)
 		{
-			temp = arg_v[i + j];
+			temp = arg_v[i*6 + j];
 			arg_sat_i[j] = temp;
 		}
 		args_glonass[i] = arg_sat_i;
@@ -54,8 +54,8 @@ GeneralProcessModel::GeneralProcessModel(double t0, double t1, double smlInc):TM
 	{
 		for (int j = 0; j < 6; j++)
 		{
-			//TODO:ошибка в индексации - переделывай нахер и чекни в RHS чтобы такого дерьма не было
-			_x0[i + j] = GLONASS.satellites[i].getX0()[j];
+		
+			_x0[i*6 + j] = GLONASS.satellites[i].getX0()[j];
 		}
 	}
 	
@@ -88,7 +88,7 @@ TVector * GeneralProcessModel::getRight(const TVector & arg_v, double _t, TVecto
 	{
 		for (int j = 0; j < 6; j++)
 		{
-			k_i[i + j] = glonass_rhs[i][j];
+			k_i[i*6 + j] = glonass_rhs[i][j];
 		}
 	}
 
