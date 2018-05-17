@@ -84,6 +84,9 @@
     <ClInclude Include="CalmanFilter.h">
       <Filter>Headerdateien\CalmanFilter</Filter>
     </ClInclude>
+    <ClInclude Include="GPSSystem.h">
+      <Filter>Headerdateien\Satellites</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc">
@@ -135,6 +138,9 @@
     </ClCompile>
     <ClCompile Include="CalmanFilter.cpp">
       <Filter>Headerdateien\CalmanFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="GPSSystem.cpp">
+      <Filter>Quelldateien\Satellites</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

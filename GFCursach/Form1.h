@@ -192,7 +192,7 @@ namespace CppCLR_WinformsProjekt {
 		double T0 = 0.0;
 		double T1 = 11 * 60 * 60 + 15 * 60;
 		T1 = 100.0;
-		double smpl_inc = 0.1;
+		double smpl_inc = 1.0;
 
 		this->progressBar1->Minimum = T0;
 		this->progressBar1->Maximum= T1;
@@ -207,9 +207,9 @@ namespace CppCLR_WinformsProjekt {
 		//печать заголовков для глонаса
 		for (int i = 0; i < model.GLONASS.getSatNumber(); i++)
 			fout << "Xglon_" <<i<< " " << "Yglon_" << i << " " << "Zglon_" << i << " " << "Vxglon_" << i << " " << "Vyglon_" << i << " " << "Vzglon_" << i << " ";
-		////печать заголовков для GPS
-		//for (int i = 0; i < model.GPS.getSatNumber(); i++)
-			//fout << "Xgps_" << i << " " << "Ygps_" << i << " " << "Zgps_" << i << " " << "Vxgps_" << i << " " << "Vygps_" << i << " " << "Vzgps_" << i << " ";
+		//печать заголовков для GPS
+		for (int i = 0; i < model.GPS.getSatNumber(); i++)
+			fout << "Xgps_" << i << " " << "Ygps_" << i << " " << "Zgps_" << i << " " << "Vxgps_" << i << " " << "Vygps_" << i << " " << "Vzgps_" << i << " ";
 		//печать заголовков для спутника-потребителя
 		fout << "Xcon" << " " << "Ycon" << " " << "Zcon" << " " << "Vxcon" << " " << "Vycon" << " " << "Vzcon" << " " << "t"<<endl;
 

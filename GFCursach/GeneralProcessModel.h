@@ -2,11 +2,13 @@
 #include"TModel.h"
 #include"Satelite.h"
 #include"GLONASSsystem.h"
+#include"GPSSystem.h"
 #include<vector>
 class GeneralProcessModel: public TModel
 {
 public:
 	GLONASSsystem GLONASS;
+	GPSSystem GPS;
 	Satellite ISZ_consumer;
 
 private:
@@ -23,6 +25,7 @@ private:
 
 
 	vector<TVector> getGlonassArgList(const TVector& arg_v);
+	vector<TVector> getGpsArgList(const TVector& arg_v);
 	TVector getISZ_consumerArg(const TVector& arg_v);
 public:
 	GeneralProcessModel();

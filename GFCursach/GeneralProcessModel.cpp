@@ -27,6 +27,31 @@ vector<TVector> GeneralProcessModel::getGlonassArgList(const TVector & arg_v)
 	return args_glonass;
 }
 
+vector<TVector> GeneralProcessModel::getGpsArgList(const TVector & arg_v)
+{
+	//формирование списка векторов-аргументов для GPS
+	//предполагается, что вектора состояния спутников системы глонасс - 
+	// - это первые GLONASS.getSatNumber()*6 компонент фазового вектора arg_v
+	//далее за ними, идут GPS.getSatNumber()*6 элементов векторов состояния 
+	//спутников системы GPS
+
+
+	//TODO: по аналогии с ГЛОНАСС
+	vector<TVector> args_gps(GPS.getSatNumber());
+	double temp = 0.0;
+	for (int i = 0; i < args_gps.size(); i++)
+	{
+		TVector arg_sat_i(6);
+		for (int j = 0; j < arg_sat_i.getSize(); j++)
+		{
+			temp = arg_v[(i + GLONASS.getSatNumber()) * 6 + j];
+			arg_sat_i[j] = temp;
+		}
+		args_gps[i] = arg_sat_i;
+	}
+	return args_gps;
+}
+
 TVector GeneralProcessModel::getISZ_consumerArg(const TVector & arg_v)
 {
 	//условились, что аргументы потребиетля, это последние 6 значений в arg_v
@@ -45,31 +70,30 @@ GeneralProcessModel::GeneralProcessModel()
 GeneralProcessModel::GeneralProcessModel(double t0, double t1, double smlInc):TModel(t0,t1,smlInc)
 {
 	//создание моделей ГНСС систем проходит перед входом в конструктор
-	count_of_ur = GLONASS.getSatNumber() * 6 + 6;
+	count_of_ur = GLONASS.getSatNumber() * 6 + GPS.getSatNumber() * 6 + 6;
 
 
-	//инициализация начальных условий системы ГЛОНАСС
+	//инициализация начальных условий системы ГЛОНАСС и GPS
 	TVector _x0(count_of_ur);
 	for (int i = 0; i < GLONASS.getSatNumber(); i++)
 	{
 		for (int j = 0; j < 6; j++)
 		{
-		
 			_x0[i*6 + j] = GLONASS.satellites[i].getX0()[j];
+			_x0[(i + GLONASS.getSatNumber()) * 6 + j] = GPS.satellites[i].getX0()[j];
 		}
 	}
 	
-	//std::cout << "X0: "; _x0.print();
 
-
+	//создание спутника-потребителя
 	ISZ_consumer = Satellite(Theta, omega, OMEGA, i, a, e);
-	//std::cout << "X0_isz: "; ISZ_consumer.getX0().print();
 
+	//Инициализация начальных условий спутника-потребителя
 	int ISZ_consumer_initIndex = _x0.getSize() - 6;
 	for (int i = ISZ_consumer_initIndex; i < _x0.getSize(); i++) {
 		_x0[i] = ISZ_consumer.getX0()[i-ISZ_consumer_initIndex];
 	}
-	//std::cout << "X0: "; _x0.print();
+	std::cout << "X0: "; _x0.print();
 	setX0(_x0);
 	
 	
@@ -92,8 +116,22 @@ TVector * GeneralProcessModel::getRight(const TVector & arg_v, double _t, TVecto
 		}
 	}
 
-	//TODO: здесь будет тоже самое, для GPS
+	//здесь тоже самое, для GPS
 
+	//получение аргумента для спутников GPS
+	vector<TVector> gpsArgList = getGpsArgList(arg_v);
+
+	//получение правых частей для спутников ГЛОНАСС
+	vector<TVector> gps_rhs = GPS.getRHSs(glonassArgList, _t);
+
+	//перенос правых частей ГЛОНАСС в выходной вектор правых частей
+	for (int i = 0; i < gps_rhs.size(); i++)
+	{
+		for (int j = 0; j < 6; j++)
+		{
+			k_i[(i + GLONASS.getSatNumber()) * 6 + j] = gps_rhs[i][j];
+		}
+	}
 
 
 
