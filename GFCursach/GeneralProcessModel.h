@@ -22,11 +22,19 @@ private:
 	double a = 500 * 1000;
 	double e = Satellite::ToRad(0);
 
+	//параметы зашумления начальных услловй истинного движения спутников
+	const double Kglonass[6] = {13.0, 13.0, 13.0, 0.3, 0.3, 0.3};
+	const double Kgps[6] = {10.0, 10.0, 10.0, 0.1, 0.1 , 0.1};
+	const double Kconsumer[6] = { 100.0, 100.0, 100.0, 1.0, 1.0 , 1.0 };
+
 
 
 	vector<TVector> getGlonassArgList(const TVector& arg_v);
 	vector<TVector> getGpsArgList(const TVector& arg_v);
 	TVector getISZ_consumerArg(const TVector& arg_v);
+	void addNoiseToICGlonass();
+	void addNoiseToICGps();
+	void addNoiseToICconsumer();
 public:
 	GeneralProcessModel();
 	GeneralProcessModel(double t0, double t1,double smlInc);

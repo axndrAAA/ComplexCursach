@@ -29,6 +29,16 @@ TVector::TVector(const TVector &B) {
 	for (int i = 0; i < size; i++)vector[i] = B.vector[i];
 }
 
+TVector::TVector(const double * arr, int _size)
+{
+	size = _size;
+	vector = new double[size];
+	for (int i = 0; i < size; i++)
+	{
+		vector[i] = arr[i];
+	}
+}
+
 int TVector::getMinSize(TVector a, TVector b)const {
 	if (a.size > b.size)return b.size;
 	else return a.size;

@@ -50,3 +50,5 @@ vector<TVector> GLONASSsystem::getRHSs(const vector<TVector> &args_sats, double 
 	}
 	return ret;
 }
+
+

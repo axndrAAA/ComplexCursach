@@ -16,6 +16,7 @@ public:	 TVector(int);
 		 TVector();
 		  ~TVector();
 		 TVector(const TVector&);
+		 TVector(const double* arr, int size);
 		 TVector& operator =(const TVector&);
 		 TVector operator +(const TVector&)const throw(IncorrectIndexException);
 		 //векторное произведение

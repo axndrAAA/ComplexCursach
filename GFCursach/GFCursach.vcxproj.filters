@@ -87,6 +87,9 @@
     <ClInclude Include="GPSSystem.h">
       <Filter>Headerdateien\Satellites</Filter>
     </ClInclude>
+    <ClInclude Include="WhiteNoiseGenerator.h">
+      <Filter>Headerdateien\CalmanFilter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc">
@@ -136,11 +139,14 @@
     <ClCompile Include="GLONASSsystem.cpp">
       <Filter>Quelldateien\Satellites</Filter>
     </ClCompile>
-    <ClCompile Include="CalmanFilter.cpp">
-      <Filter>Headerdateien\CalmanFilter</Filter>
-    </ClCompile>
     <ClCompile Include="GPSSystem.cpp">
       <Filter>Quelldateien\Satellites</Filter>
+    </ClCompile>
+    <ClCompile Include="CalmanFilter.cpp">
+      <Filter>Quelldateien\CalmanFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="WhiteNoiseGenerator.cpp">
+      <Filter>Quelldateien\CalmanFilter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

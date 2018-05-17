@@ -23,10 +23,12 @@ public:
 
 
 	GLONASSsystem();
+	//получение количества спутников
+	int getSatNumber() { return satellites.size(); }	
+	
 	//получение правых частей уравнений для всех спутников
 	vector<TVector> getRHSs(const vector<TVector> &args_sats, double _t);
-
-	int getSatNumber() { return satellites.size(); }
+	
 
 };
 

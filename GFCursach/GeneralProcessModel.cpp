@@ -3,6 +3,7 @@
 #include"GLONASSsystem.h"
 #include<vector>
 #include<iostream>
+#include"WhiteNoiseGenerator.h"
 using namespace std;
 
 vector<TVector> GeneralProcessModel::getGlonassArgList(const TVector & arg_v)
@@ -63,6 +64,57 @@ TVector GeneralProcessModel::getISZ_consumerArg(const TVector & arg_v)
 	return ret;
 }
 
+void GeneralProcessModel::addNoiseToICGlonass()
+{
+	//зашумление начальных условий навигационных спутников ГЛОНАСС
+	for (int i = 0; i < GLONASS.getSatNumber(); i++)
+	{
+		//создаем генератор с заданными параметрами
+		WhiteNoiseGenerator wng(GLONASS.satellites[i].getX0(), TVector(Kglonass, 6));
+
+		//получаем текущий вектор X0
+		TVector x0 = GLONASS.satellites[i].getX0();
+
+		//добавляем к X0 шум (т.к. шум аддитивный и гаусовский по условию)
+		x0 = x0 + wng.getNext();
+
+		//меняем НУ на зашумленные
+		GLONASS.satellites[i].setX0(x0);
+	}
+}
+
+void GeneralProcessModel::addNoiseToICGps()
+{
+	//зашумление начальных условий навигационных спутников GPS
+	for (int i = 0; i < GPS.getSatNumber(); i++)
+	{
+		//создаем генератор с заданными параметрами
+		WhiteNoiseGenerator wng(GPS.satellites[i].getX0(), TVector(Kgps, 6));
+
+		//получаем текущий вектор X0
+		TVector x0 = GPS.satellites[i].getX0();
+
+		//добавляем к X0 шум (т.к. шум аддитивный и гаусовский по условию)
+		x0 = x0 + wng.getNext();
+
+		//меняем НУ на зашумленные
+		GPS.satellites[i].setX0(x0);
+	}
+}
+
+void GeneralProcessModel::addNoiseToICconsumer()
+{
+	//зашумление начальных условий спутника-потребителя
+	//создаем генератор с заданными параметрами
+	WhiteNoiseGenerator wng(ISZ_consumer.getX0(), TVector(Kconsumer, 6));
+	//получаем текущий вектор X0
+	TVector x0 = ISZ_consumer.getX0();
+	//добавляем к X0 шум (т.к. шум аддитивный и гаусовский по условию)
+	x0 = x0 + wng.getNext();
+	//меняем НУ на зашумленные
+	ISZ_consumer.setX0(x0);
+}
+
 GeneralProcessModel::GeneralProcessModel()
 {
 }
@@ -72,8 +124,14 @@ GeneralProcessModel::GeneralProcessModel(double t0, double t1, double smlInc):TM
 	//создание моделей ГНСС систем проходит перед входом в конструктор
 	count_of_ur = GLONASS.getSatNumber() * 6 + GPS.getSatNumber() * 6 + 6;
 
+	//зашумление начальных условий навигационных спутников ГЛОНАСС
+	//addNoiseToICGlonass();
 
-	//инициализация начальных условий системы ГЛОНАСС и GPS
+	//зашумление начальных условий навигационных спутников GPS
+	//addNoiseToICGps();
+
+
+	//перегрузка начальных условий системы ГЛОНАСС и GPS в фазовый вектор моделируемой системы
 	TVector _x0(count_of_ur);
 	for (int i = 0; i < GLONASS.getSatNumber(); i++)
 	{
@@ -88,7 +146,10 @@ GeneralProcessModel::GeneralProcessModel(double t0, double t1, double smlInc):TM
 	//создание спутника-потребителя
 	ISZ_consumer = Satellite(Theta, omega, OMEGA, i, a, e);
 
-	//Инициализация начальных условий спутника-потребителя
+	//зашумление начальных условий спутника-потребителя
+	//addNoiseToICconsumer();
+
+	//перегрузка начальных условий спутника-потребителя в фазовый вектор моделируемой системы
 	int ISZ_consumer_initIndex = _x0.getSize() - 6;
 	for (int i = ISZ_consumer_initIndex; i < _x0.getSize(); i++) {
 		_x0[i] = ISZ_consumer.getX0()[i-ISZ_consumer_initIndex];
