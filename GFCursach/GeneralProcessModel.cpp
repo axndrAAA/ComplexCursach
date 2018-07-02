@@ -3,7 +3,7 @@
 #include"GLONASSsystem.h"
 #include<vector>
 #include<iostream>
-#include"WhiteNoiseGenerator.h"
+#include"GausianExtention.h"
 using namespace std;
 
 vector<TVector> GeneralProcessModel::getGlonassArgList(const TVector & arg_v)
@@ -70,7 +70,7 @@ void GeneralProcessModel::addNoiseToICGlonass()
 	for (int i = 0; i < GLONASS.getSatNumber(); i++)
 	{
 		//создаем генератор с заданными параметрами
-		WhiteNoiseGenerator wng(GLONASS.satellites[i].getX0(), TVector(Kglonass, 6));
+		GausianExtention wng(GLONASS.satellites[i].getX0(), TVector(Kglonass, 6));
 
 		//получаем текущий вектор X0
 		TVector x0 = GLONASS.satellites[i].getX0();
@@ -89,7 +89,7 @@ void GeneralProcessModel::addNoiseToICGps()
 	for (int i = 0; i < GPS.getSatNumber(); i++)
 	{
 		//создаем генератор с заданными параметрами
-		WhiteNoiseGenerator wng(GPS.satellites[i].getX0(), TVector(Kgps, 6));
+		GausianExtention wng(GPS.satellites[i].getX0(), TVector(Kgps, 6));
 
 		//получаем текущий вектор X0
 		TVector x0 = GPS.satellites[i].getX0();
@@ -106,13 +106,19 @@ void GeneralProcessModel::addNoiseToICconsumer()
 {
 	//зашумление начальных условий спутника-потребителя
 	//создаем генератор с заданными параметрами
-	WhiteNoiseGenerator wng(ISZ_consumer.getX0(), TVector(Kconsumer, 6));
+	GausianExtention wng(ISZ_consumer.getX0(), TVector(Kconsumer, 6));
 	//получаем текущий вектор X0
 	TVector x0 = ISZ_consumer.getX0();
 	//добавляем к X0 шум (т.к. шум аддитивный и гаусовский по условию)
 	x0 = x0 + wng.getNext();
 	//меняем НУ на зашумленные
 	ISZ_consumer.setX0(x0);
+}
+
+vector<int> GeneralProcessModel::getSats(const TVector & arg_v, double t)
+{
+	//TODO: реализация по геометрическим сотношениям
+	return vector<int>();
 }
 
 GeneralProcessModel::GeneralProcessModel()
@@ -122,7 +128,7 @@ GeneralProcessModel::GeneralProcessModel()
 GeneralProcessModel::GeneralProcessModel(double t0, double t1, double smlInc):TModel(t0,t1,smlInc)
 {
 	//создание моделей ГНСС систем проходит перед входом в конструктор
-	count_of_ur = GLONASS.getSatNumber() * 6 + GPS.getSatNumber() * 6 + 6;
+	count_of_ur = GLONASS.getSatNumber() * 6 + GPS.getSatNumber() * 6 + 2 + 6;
 
 	//зашумление начальных условий навигационных спутников ГЛОНАСС
 	//addNoiseToICGlonass();
@@ -141,6 +147,10 @@ GeneralProcessModel::GeneralProcessModel(double t0, double t1, double smlInc):TM
 			_x0[(i + GLONASS.getSatNumber()) * 6 + j] = GPS.satellites[i].getX0()[j];
 		}
 	}
+
+	//далее идут два компонента от ДУ формирующего фильтра
+	_x0[GLONASS.getSatNumber() * 6 * 2] = m_cr_ion_ro;//для псевдодальности
+	_x0[GLONASS.getSatNumber() * 6 * 2 + 1] = m_sys_dro;//для псевдоскорости
 	
 
 	//создание спутника-потребителя
@@ -195,6 +205,11 @@ TVector * GeneralProcessModel::getRight(const TVector & arg_v, double _t, TVecto
 	}
 
 
+	//два ДУ формирующего фильтра
+	k_i[GLONASS.getSatNumber() * 6 * 2] = -m_ro*arg_v[GLONASS.getSatNumber() * 6 * 2] 
+		+ sqrt(2.0*sigma_ro*sigma_ro)*wng_ro.getW(_t);//для псевдодальности
+	k_i[GLONASS.getSatNumber() * 6 * 2 + 1] = -m_dro*arg_v[GLONASS.getSatNumber() * 6 * 2 + 1]
+		+ sqrt(2.0*sigma_ro*sigma_ro)*wng_dro.getW(_t);//для псевдоскорости
 
 	//получение аргумента потребителя
 	TVector isz_consumer_args = getISZ_consumerArg(arg_v);

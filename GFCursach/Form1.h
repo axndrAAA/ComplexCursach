@@ -1,6 +1,7 @@
 #pragma once
 #include"TIntegrator.h"
 #include"GeneralProcessModel.h"
+#include"WhiteNoiseGenerator.h"
 #include <iostream>
 #include<fstream>
 #include<stdio.h>
@@ -180,6 +181,8 @@ namespace CppCLR_WinformsProjekt {
 			this->ResumeLayout(false);
 
 		}
+
+
 #pragma endregion
 	private: System::Void Моделировать_Click(System::Object^  sender, System::EventArgs^  e) {
 		this->progressBar1->Value = 0;
@@ -210,6 +213,9 @@ namespace CppCLR_WinformsProjekt {
 		//печать заголовков для GPS
 		for (int i = 0; i < model.GPS.getSatNumber(); i++)
 			fout << "Xgps_" << i << " " << "Ygps_" << i << " " << "Zgps_" << i << " " << "Vxgps_" << i << " " << "Vygps_" << i << " " << "Vzgps_" << i << " ";
+		//печать заголовка для ФФ
+		cout << "FF_ro FF_dro";
+
 		//печать заголовков для спутника-потребителя
 		fout << "Xcon" << " " << "Ycon" << " " << "Zcon" << " " << "Vxcon" << " " << "Vycon" << " " << "Vzcon" << " " << "t"<<endl;
 

@@ -164,7 +164,8 @@
     <ClInclude Include="TModel.h" />
     <ClInclude Include="TQuaternion.h" />
     <ClInclude Include="UsrSatellite.h" />
-    <ClInclude Include="WhiteNoiseGenerator.h" />
+    <ClInclude Include="GausianExtention.h" />
+    <ClInclude Include="WhiteNoiseModel.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc" />
@@ -191,7 +192,8 @@
     <ClCompile Include="TQuaternion.cpp" />
     <ClCompile Include="TVector_class.cpp" />
     <ClCompile Include="UsrSatellite.cpp" />
-    <ClCompile Include="WhiteNoiseGenerator.cpp" />
+    <ClCompile Include="GausianExtention.cpp" />
+    <ClCompile Include="WhiteNoiseModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico" />
