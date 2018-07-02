@@ -184,6 +184,7 @@ TVector * GeneralProcessModel::getRight(const TVector & arg_v, double _t, TVecto
 		for (int j = 0; j < 6; j++)
 		{
 			k_i[i*6 + j] = glonass_rhs[i][j];
+			j = j;
 		}
 	}
 
