@@ -44,6 +44,16 @@ int TVector::getMinSize(TVector a, TVector b)const {
 	else return a.size;
 }
 
+std::vector<double> TVector::getStdVector()
+{
+	std::vector<double> ret(getSize());
+	for (size_t i = 0; i < ret.size(); i++)
+	{
+		ret[i] = vector[i];
+	}
+	return ret;
+}
+
 
 
 TQuaternion TVector::operator*(const TQuaternion &_quat)

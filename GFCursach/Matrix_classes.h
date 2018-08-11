@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 #include<iostream>
+#include<vector>
+
 //раздебажено
 class TMatrix;
 class TQuaternion;
@@ -34,11 +36,14 @@ public:	 TVector(int);
 		 void setElement(int, double) throw(IncorrectIndexException);
 		 void setLenght(int) throw(IncorrectIndexException);
 		 int getMinSize(TVector, TVector)const;
+		 std::vector<double> getStdVector();
+
 		 void print() {
 			 for (int i = 0; i < getSize(); i++)
 				 std::cout << vector[i] << " ";
 			 std::cout << std::endl;
 		 }
+
 
 
 		 //TQuaternion

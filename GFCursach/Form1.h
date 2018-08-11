@@ -8,6 +8,7 @@
 #include<stdlib.h>
 
 #include"GaussianDistribution.h"
+#include"WhiteNoiseGenerator.h"
 using namespace std;
 
 namespace CppCLR_WinformsProjekt {
@@ -213,6 +214,14 @@ namespace CppCLR_WinformsProjekt {
 			vec.print();
 			cur = cur;
 			vec = vec;
+		}
+
+		WhiteNoiseGenerator wng (0, 2.6, 0.1, m, sig);
+		double t = .0;
+		while (t < 2.6)
+		{
+			cur = wng.getStdVectVal(t);
+			t += 0.04;
 		}
 
 
