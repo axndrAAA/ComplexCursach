@@ -152,6 +152,7 @@
     <ClInclude Include="Form1.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="GaussianDistribution.h" />
     <ClInclude Include="GeneralProcessModel.h" />
     <ClInclude Include="GLONASSsystem.h" />
     <ClInclude Include="GPSSystem.h" />
@@ -164,6 +165,7 @@
     <ClInclude Include="TModel.h" />
     <ClInclude Include="TQuaternion.h" />
     <ClInclude Include="UsrSatellite.h" />
+    <ClInclude Include="WhiteNoiseGenerator.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc" />
@@ -173,6 +175,7 @@
     <ClCompile Include="CalmanFilter.cpp" />
     <ClCompile Include="CppCLR_WinformsProjekt.cpp" />
     <ClCompile Include="Form1.cpp" />
+    <ClCompile Include="GaussianDistribution.cpp" />
     <ClCompile Include="GeneralProcessModel.cpp" />
     <ClCompile Include="GLONASSsystem.cpp" />
     <ClCompile Include="GPSSystem.cpp" />
@@ -190,6 +193,7 @@
     <ClCompile Include="TQuaternion.cpp" />
     <ClCompile Include="TVector_class.cpp" />
     <ClCompile Include="UsrSatellite.cpp" />
+    <ClCompile Include="WhiteNoiseGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico" />

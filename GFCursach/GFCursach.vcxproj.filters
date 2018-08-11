@@ -37,6 +37,12 @@
     <Filter Include="Quelldateien\CalmanFilter">
       <UniqueIdentifier>{502125a3-d885-4016-acc7-308440d05594}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Noise">
+      <UniqueIdentifier>{a4707f1d-c34c-4536-bc61-bd6b4222b738}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Nosie">
+      <UniqueIdentifier>{a3e0c6d6-8f42-4692-8334-ce488e028767}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -86,6 +92,12 @@
     </ClInclude>
     <ClInclude Include="GPSSystem.h">
       <Filter>Headerdateien\Satellites</Filter>
+    </ClInclude>
+    <ClInclude Include="WhiteNoiseGenerator.h">
+      <Filter>Headerdateien\Noise</Filter>
+    </ClInclude>
+    <ClInclude Include="GaussianDistribution.h">
+      <Filter>Headerdateien\Noise</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -141,6 +153,12 @@
     </ClCompile>
     <ClCompile Include="CalmanFilter.cpp">
       <Filter>Quelldateien\CalmanFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="WhiteNoiseGenerator.cpp">
+      <Filter>Quelldateien\Nosie</Filter>
+    </ClCompile>
+    <ClCompile Include="GaussianDistribution.cpp">
+      <Filter>Quelldateien\Nosie</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -6,7 +6,8 @@
 #include<stdio.h>
 #include<Windows.h>
 #include<stdlib.h>
-#include<threadpoolapiset.h>
+
+#include"GaussianDistribution.h"
 using namespace std;
 
 namespace CppCLR_WinformsProjekt {
@@ -199,6 +200,20 @@ namespace CppCLR_WinformsProjekt {
 		this->progressBar1->Minimum = T0;
 		this->progressBar1->Maximum= T1;
 		this->progressBar1->Step = smpl_inc;
+
+		vector<double> m = { 1,3,3 };
+		vector<double> sig = { 0.5,1,3 };
+		GaussianDistribution distrib(m, sig);
+		vector<double> cur;
+		TVector vec;
+		for (size_t i = 0; i < 6; i++)
+		{
+			cur = distrib.getRndByDefaultParameters();
+			vec = distrib.getRndVectByDefaultParameters();
+			vec.print();
+			cur = cur;
+			vec = vec;
+		}
 
 
 		GeneralProcessModel model(T0,T1,smpl_inc);
