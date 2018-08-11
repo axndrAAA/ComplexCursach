@@ -3,7 +3,7 @@
 #include"GLONASSsystem.h"
 #include<vector>
 #include<iostream>
-#include"GausianExtention.h"
+//#include"GausianExtention.h"
 using namespace std;
 
 vector<TVector> GeneralProcessModel::getGlonassArgList(const TVector & arg_v)
@@ -66,53 +66,53 @@ TVector GeneralProcessModel::getISZ_consumerArg(const TVector & arg_v)
 
 void GeneralProcessModel::addNoiseToICGlonass()
 {
-	//зашумление начальных условий навигационных спутников ГЛОНАСС
-	for (int i = 0; i < GLONASS.getSatNumber(); i++)
-	{
-		//создаем генератор с заданными параметрами
-		GausianExtention wng(GLONASS.satellites[i].getX0(), TVector(Kglonass, 6));
+	////зашумление начальных условий навигационных спутников ГЛОНАСС
+	//for (int i = 0; i < GLONASS.getSatNumber(); i++)
+	//{
+	//	//создаем генератор с заданными параметрами
+	//	GausianExtention wng(GLONASS.satellites[i].getX0(), TVector(Kglonass, 6));
 
-		//получаем текущий вектор X0
-		TVector x0 = GLONASS.satellites[i].getX0();
+	//	//получаем текущий вектор X0
+	//	TVector x0 = GLONASS.satellites[i].getX0();
 
-		//добавляем к X0 шум (т.к. шум аддитивный и гаусовский по условию)
-		x0 = x0 + wng.getNext();
+	//	//добавляем к X0 шум (т.к. шум аддитивный и гаусовский по условию)
+	//	x0 = x0 + wng.getNext();
 
-		//меняем НУ на зашумленные
-		GLONASS.satellites[i].setX0(x0);
-	}
+	//	//меняем НУ на зашумленные
+	//	GLONASS.satellites[i].setX0(x0);
+	//}
 }
 
 void GeneralProcessModel::addNoiseToICGps()
 {
-	//зашумление начальных условий навигационных спутников GPS
-	for (int i = 0; i < GPS.getSatNumber(); i++)
-	{
-		//создаем генератор с заданными параметрами
-		GausianExtention wng(GPS.satellites[i].getX0(), TVector(Kgps, 6));
+	////зашумление начальных условий навигационных спутников GPS
+	//for (int i = 0; i < GPS.getSatNumber(); i++)
+	//{
+	//	//создаем генератор с заданными параметрами
+	//	GausianExtention wng(GPS.satellites[i].getX0(), TVector(Kgps, 6));
 
-		//получаем текущий вектор X0
-		TVector x0 = GPS.satellites[i].getX0();
+	//	//получаем текущий вектор X0
+	//	TVector x0 = GPS.satellites[i].getX0();
 
-		//добавляем к X0 шум (т.к. шум аддитивный и гаусовский по условию)
-		x0 = x0 + wng.getNext();
+	//	//добавляем к X0 шум (т.к. шум аддитивный и гаусовский по условию)
+	//	x0 = x0 + wng.getNext();
 
-		//меняем НУ на зашумленные
-		GPS.satellites[i].setX0(x0);
-	}
+	//	//меняем НУ на зашумленные
+	//	GPS.satellites[i].setX0(x0);
+	//}
 }
 
 void GeneralProcessModel::addNoiseToICconsumer()
 {
-	//зашумление начальных условий спутника-потребителя
-	//создаем генератор с заданными параметрами
-	GausianExtention wng(ISZ_consumer.getX0(), TVector(Kconsumer, 6));
-	//получаем текущий вектор X0
-	TVector x0 = ISZ_consumer.getX0();
-	//добавляем к X0 шум (т.к. шум аддитивный и гаусовский по условию)
-	x0 = x0 + wng.getNext();
-	//меняем НУ на зашумленные
-	ISZ_consumer.setX0(x0);
+	////зашумление начальных условий спутника-потребителя
+	////создаем генератор с заданными параметрами
+	//GausianExtention wng(ISZ_consumer.getX0(), TVector(Kconsumer, 6));
+	////получаем текущий вектор X0
+	//TVector x0 = ISZ_consumer.getX0();
+	////добавляем к X0 шум (т.к. шум аддитивный и гаусовский по условию)
+	//x0 = x0 + wng.getNext();
+	////меняем НУ на зашумленные
+	//ISZ_consumer.setX0(x0);
 }
 
 vector<int> GeneralProcessModel::getSats(const TVector & arg_v, double t)
@@ -188,15 +188,15 @@ TVector * GeneralProcessModel::getRight(const TVector & arg_v, double _t, TVecto
 		}
 	}
 
-	//здесь тоже самое, для GPS
+	// тоже самое, для GPS
 
 	//получение аргумента для спутников GPS
 	vector<TVector> gpsArgList = getGpsArgList(arg_v);
 
-	//получение правых частей для спутников ГЛОНАСС
-	vector<TVector> gps_rhs = GPS.getRHSs(glonassArgList, _t);
+	//получение правых частей для спутников GPS
+	vector<TVector> gps_rhs = GPS.getRHSs(gpsArgList, _t);
 
-	//перенос правых частей ГЛОНАСС в выходной вектор правых частей
+	//перенос правых частей GPS в выходной вектор правых частей
 	for (int i = 0; i < gps_rhs.size(); i++)
 	{
 		for (int j = 0; j < 6; j++)
@@ -207,10 +207,10 @@ TVector * GeneralProcessModel::getRight(const TVector & arg_v, double _t, TVecto
 
 
 	//два ДУ формирующего фильтра
-	k_i[GLONASS.getSatNumber() * 6 * 2] = -m_ro*arg_v[GLONASS.getSatNumber() * 6 * 2] 
-		+ sqrt(2.0*sigma_ro*sigma_ro)*wng_ro.getW(_t);//для псевдодальности
-	k_i[GLONASS.getSatNumber() * 6 * 2 + 1] = -m_dro*arg_v[GLONASS.getSatNumber() * 6 * 2 + 1]
-		+ sqrt(2.0*sigma_ro*sigma_ro)*wng_dro.getW(_t);//для псевдоскорости
+	k_i[GLONASS.getSatNumber() * 6 * 2] = -m_ro * arg_v[GLONASS.getSatNumber() * 6 * 2]
+		+ sqrt(2.0*sigma_ro*sigma_ro) * 1.0;// wng_ro.getW(_t);//для псевдодальности
+	k_i[GLONASS.getSatNumber() * 6 * 2 + 1] = -m_dro * arg_v[GLONASS.getSatNumber() * 6 * 2 + 1]
+		+ sqrt(2.0*sigma_ro*sigma_ro)*1.0;//wng_dro.getW(_t);//для псевдоскорости
 
 	//получение аргумента потребителя
 	TVector isz_consumer_args = getISZ_consumerArg(arg_v);
@@ -232,6 +232,12 @@ TVector * GeneralProcessModel::getRight(const TVector & arg_v, double _t, TVecto
 
 void GeneralProcessModel::AddResult(TVector & vect, double t)
 {
+	//здесь реализуем выбор рабочего созвездия, 
+	//измерения
+	//и шаг самого фильтра Кламана
+
+
+	//заглушка
 	TModel::AddResult(vect, t);
 	std::cout << "t: " << t << endl;
 	if (t >= T1-SamplingIncrement) {
@@ -239,10 +245,6 @@ void GeneralProcessModel::AddResult(TVector & vect, double t)
 	}
 
 
-
-	if (incProgressBar) {
-		incProgressBar();
-	}
 
 }
 

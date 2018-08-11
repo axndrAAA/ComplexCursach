@@ -87,12 +87,6 @@
     <ClInclude Include="GPSSystem.h">
       <Filter>Headerdateien\Satellites</Filter>
     </ClInclude>
-    <ClInclude Include="GausianExtention.h">
-      <Filter>Headerdateien\CalmanFilter</Filter>
-    </ClInclude>
-    <ClInclude Include="WhiteNoiseModel.h">
-      <Filter>Headerdateien\CalmanFilter</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc">
@@ -146,12 +140,6 @@
       <Filter>Quelldateien\Satellites</Filter>
     </ClCompile>
     <ClCompile Include="CalmanFilter.cpp">
-      <Filter>Quelldateien\CalmanFilter</Filter>
-    </ClCompile>
-    <ClCompile Include="GausianExtention.cpp">
-      <Filter>Quelldateien\CalmanFilter</Filter>
-    </ClCompile>
-    <ClCompile Include="WhiteNoiseModel.cpp">
       <Filter>Quelldateien\CalmanFilter</Filter>
     </ClCompile>
   </ItemGroup>
