@@ -54,6 +54,21 @@ std::vector<double> TVector::getStdVector()
 	return ret;
 }
 
+TVector TVector::sub(int beg, int end)
+{
+	if (beg < 0 || beg > size || end < 0 || end > size)
+		return TVector();
+
+	TVector ret(end - beg);
+
+	for (size_t i = beg; i < end; i++)
+	{
+		ret[i - beg] = vector[i];
+	}
+	
+	return ret;
+}
+
 
 
 TQuaternion TVector::operator*(const TQuaternion &_quat)

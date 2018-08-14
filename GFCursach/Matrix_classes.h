@@ -37,6 +37,7 @@ public:	 TVector(int);
 		 void setLenght(int) throw(IncorrectIndexException);
 		 int getMinSize(TVector, TVector)const;
 		 std::vector<double> getStdVector();
+		 TVector sub(int beg, int end);
 
 		 void print() {
 			 for (int i = 0; i < getSize(); i++)

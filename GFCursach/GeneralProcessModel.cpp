@@ -150,19 +150,86 @@ vector<NavSatellite> GeneralProcessModel::getBestConstellation(vector<NavSatelli
 	//TODO: поиск созвездия
 	vector<NavSatellite> out = vector<NavSatellite>(4);
 
+	float pdopMin = 1e-10;
 
-	return vector<NavSatellite>();
+	for (size_t a = 0; a < navSats.size() - 3; a++)
+	{
+		if (isVisble(ISZ_consumer, navSats[a])) {
+			for (size_t b = a + 1; b < navSats.size(); b++)
+			{
+				if (isVisble(ISZ_consumer, navSats[b])) {
+					for (size_t c = b + 1; c < navSats.size(); c++)
+					{
+						if (isVisble(ISZ_consumer, navSats[c])) {
+							for (size_t d = c + 1; d < navSats.size(); d++)
+							{
+								if (isVisble(ISZ_consumer, navSats[d])) {
+									//формируем матрицу A
+									TMatrix A(4, 4);
+
+									//делаем так же как в методичке (у Олега А домножена на -1)
+									TVector r_a_con = (navSats[a].getXcur() + ISZ_consumer.getXcur()*(-1.0)).sub(0, 4);
+									float r_a_con_mod = sqrt(pow(r_a_con[0], 2) + pow(r_a_con[1], 2) + pow(r_a_con[2], 2));
+									r_a_con = r_a_con * (1.0 / r_a_con_mod);
+									r_a_con[3] = -1.0;
+									A[0] = r_a_con;
+
+									TVector r_b_con = (navSats[b].getXcur() + ISZ_consumer.getXcur()*(-1.0)).sub(0, 4);
+									float r_b_con_mod = sqrt(pow(r_b_con[0], 2) + pow(r_b_con[1], 2) + pow(r_b_con[2], 2));
+									r_b_con = r_b_con * (1.0 / r_b_con_mod);
+									r_b_con[3] = -1.0;
+									A[1] = r_b_con;
+
+									TVector r_c_con = (navSats[c].getXcur() + ISZ_consumer.getXcur()*(-1.0)).sub(0, 4);
+									float r_c_con_mod = sqrt(pow(r_c_con[0], 2) + pow(r_c_con[1], 2) + pow(r_c_con[2], 2));
+									r_c_con = r_c_con * (1.0 / r_c_con_mod);
+									r_c_con[3] = -1.0;
+									A[2] = r_c_con;
+
+									TVector r_d_con = (navSats[d].getXcur() + ISZ_consumer.getXcur()*(-1.0)).sub(0, 4);
+									float r_d_con_mod = sqrt(pow(r_d_con[0], 2) + pow(r_d_con[1], 2) + pow(r_d_con[2], 2));
+									r_d_con = r_d_con * (1.0 / r_d_con_mod);
+									r_d_con[3] = -1.0;
+									A[3] = r_d_con;
+
+									TMatrix Q = (A.flip()*A).inverse();
+
+									float PDOP = sqrt(pow(Q[0][0], 2) + pow(Q[1][1], 2) + pow(Q[2][2], 2));
+
+									if (PDOP < pdopMin) {
+										pdopMin = PDOP;
+										out = {
+											navSats[a],
+											navSats[b],
+											navSats[c],
+											navSats[d],
+										};
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return out;
 }
 
 bool GeneralProcessModel::isVisble(Satellite conSat, NavSatellite nSat)
 {
 	//TODO: видимость
 
-	TVector r_con_nav = conSat.getXcur() + nSat.getXcur()*(-1.0);
-	float r_con_mod = conSat.getXcur().getMagnitude();
+	//радиус-векторы потребителя и навигационного НИСЗ
+	TVector r_con = conSat.getXcur().sub(0, 3);
+	TVector r_ns = nSat.getXcur().sub(0, 3);
+
+	TVector r_con_nav = r_con + r_ns*(-1.0);
+	float r_con_mod = r_con.getMagnitude();
 	float r_con_nav_mod = r_con_nav.getMagnitude();
 
-	float gamma = M_PI - acos(conSat.getXcur() * r_con_nav
+	float gamma = M_PI - acos(r_con * r_con_nav
 		/ r_con_mod * r_con_nav_mod);
 	float alpha = acos(6371000.0 / r_con_mod);
 
