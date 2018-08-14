@@ -1,8 +1,11 @@
+#pragma once
 #include "stdafx.h"
 #include "GeneralProcessModel.h"
 #include"GLONASSsystem.h"
 #include<vector>
 #include<iostream>
+#include<math.h>
+
 //#include"GausianExtention.h"
 using namespace std;
 
@@ -115,11 +118,62 @@ void GeneralProcessModel::addNoiseToICconsumer()
 	//ISZ_consumer.setX0(x0);
 }
 
-vector<int> GeneralProcessModel::getSats(const TVector & arg_v, double t)
+vector<NavSatellite> GeneralProcessModel::pullVectorToModel(const TVector & v, double t)
 {
-	//TODO: реализация по геометрическим сотношениям
-	return vector<int>();
+	//получаем список векторов, отвечающих за ГЛОНАСС и пихаем его в систему
+	vector<TVector> glonassArgs = getGlonassArgList(v);
+	for (size_t i = 0; i < GLONASS.getSatNumber(); i++)
+	{
+		GLONASS.satellites[i].setXcur(glonassArgs[i]);
+	}
+
+	//получаем список векторов, отвечающих за GPS и пихаем его в систему
+	vector<TVector> gpsArgs = getGpsArgList(v);
+	for (size_t i = 0; i < GPS.getSatNumber(); i++)
+	{
+		GPS.satellites[i].setXcur(gpsArgs[i]);
+	}
+
+	//получение и запихивание вектоа потребителя
+	TVector consumerArg = getISZ_consumerArg(v);
+	ISZ_consumer.setXcur(consumerArg);
+
+	//формирование выходного списка всех навигационных спутников
+	vector<NavSatellite> NavSatellites = vector<NavSatellite>(GLONASS.satellites);
+	copy(GPS.satellites.begin(), NavSatellites.end(), back_inserter(NavSatellites));
+
+	return NavSatellites;
 }
+
+vector<NavSatellite> GeneralProcessModel::getBestConstellation(vector<NavSatellite> navSats)
+{
+	//TODO: поиск созвездия
+	vector<NavSatellite> out = vector<NavSatellite>(4);
+
+
+	return vector<NavSatellite>();
+}
+
+bool GeneralProcessModel::isVisble(Satellite conSat, NavSatellite nSat)
+{
+	//TODO: видимость
+
+	TVector r_con_nav = conSat.getXcur() + nSat.getXcur()*(-1.0);
+	float r_con_mod = conSat.getXcur().getMagnitude();
+	float r_con_nav_mod = r_con_nav.getMagnitude();
+
+	float gamma = M_PI - acos(conSat.getXcur() * r_con_nav
+		/ r_con_mod * r_con_nav_mod);
+	float alpha = acos(6371000.0 / r_con_mod);
+
+	if (gamma > alpha) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 
 GeneralProcessModel::GeneralProcessModel()
 {
@@ -236,6 +290,13 @@ TVector * GeneralProcessModel::getRight(const TVector & arg_v, double _t, TVecto
 
 void GeneralProcessModel::AddResult(TVector & vect, double t)
 {
+	/*делаем выгрузку данных и фазового вектора интегратора в классы в GPS и ГЛНАСС для удобства дальнейшей работы
+	и получаем список всех навигационных спутников*/
+	vector<NavSatellite> navSats = pullVectorToModel(vect,t);
+
+	//получение 4х спутников для измерений
+	navSats = getBestConstellation(navSats);
+
 	//здесь реализуем выбор рабочего созвездия, 
 
 	//измерения

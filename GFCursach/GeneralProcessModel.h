@@ -61,8 +61,18 @@ private:
 
 	//для фильтра:
 
-	//функция возвращает спискок видимых в данный момент спутников
-	vector<int> getSats(const TVector &arg_v,double t);
+	//выгрузка фазового вектора интегратора в классы в GPS и ГЛОНАСС и ОБЪЕКТ ПОТРЕБИТЕЛЯ
+	//возвращает список Навигационных спутников 0:23 - ГЛОНАСС, 24:48 - GPS
+	vector<NavSatellite> pullVectorToModel(const TVector &v,double t);
+
+	//процедуа получения навигационного созвездия
+	vector<NavSatellite> getBestConstellation(vector<NavSatellite> navSats);
+
+	//поцедура проверки видимости нав. спутника
+	bool isVisble(Satellite conSat, NavSatellite nSat);
+	
+
+
 	
 public:
 	GeneralProcessModel();
