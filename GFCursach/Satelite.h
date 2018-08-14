@@ -37,7 +37,7 @@ public:
 	Satellite(double Theta, double omega, double OMEGA, double i, double a, double e);
 
 	TVector getRHS(const TVector &arg_v, double _t);
-	TVector getXcur();
+	TVector getXcur() const;
 	void setXcur(const TVector &newX); 
 	TVector getX0();
 	void setX0(const TVector newX);

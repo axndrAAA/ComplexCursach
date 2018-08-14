@@ -89,7 +89,7 @@ TVector Satellite::getRHS(const TVector & arg_v, double _t)
 	return ret;
 }
 
-TVector Satellite::getXcur()
+TVector Satellite::getXcur() const
 {
 	return Xcur;
 }

@@ -140,17 +140,17 @@ vector<NavSatellite> GeneralProcessModel::pullVectorToModel(const TVector & v, d
 
 	//формирование выходного списка всех навигационных спутников
 	vector<NavSatellite> NavSatellites = vector<NavSatellite>(GLONASS.satellites);
-	copy(GPS.satellites.begin(), NavSatellites.end(), back_inserter(NavSatellites));
+	copy(GPS.satellites.begin(), GPS.satellites.end(), back_inserter(NavSatellites));
 
 	return NavSatellites;
 }
 
-vector<NavSatellite> GeneralProcessModel::getBestConstellation(vector<NavSatellite> navSats)
+vector<NavSatellite> GeneralProcessModel::getBestConstellation(const vector<NavSatellite> &navSats)
 {
 	//TODO: поиск созвездия
 	vector<NavSatellite> out = vector<NavSatellite>(4);
 
-	float pdopMin = 1e-10;
+	float pdopMin = 1e10;
 
 	for (size_t a = 0; a < navSats.size() - 3; a++)
 	{
@@ -217,26 +217,23 @@ vector<NavSatellite> GeneralProcessModel::getBestConstellation(vector<NavSatelli
 	return out;
 }
 
-bool GeneralProcessModel::isVisble(Satellite conSat, NavSatellite nSat)
+bool GeneralProcessModel::isVisble(const Satellite &conSat, const NavSatellite &nSat)
 {
-	//TODO: видимость
-
 	//радиус-векторы потребителя и навигационного НИСЗ
-	TVector r_con = conSat.getXcur().sub(0, 3);
+	TVector r_con = conSat.getXcur().sub(0, 3);   
 	TVector r_ns = nSat.getXcur().sub(0, 3);
-
 	TVector r_con_nav = r_con + r_ns*(-1.0);
-	float r_con_mod = r_con.getMagnitude();
-	float r_con_nav_mod = r_con_nav.getMagnitude();
 
-	float gamma = M_PI - acos(r_con * r_con_nav
-		/ r_con_mod * r_con_nav_mod);
-	float alpha = acos(6371000.0 / r_con_mod);
+	double r_con_mod = r_con.getMagnitude();
+	double r_con_nav_mod = r_con_nav.getMagnitude();
+
+	double gamma = M_PI - acos(r_con * r_con_nav
+		/ (r_con_mod * r_con_nav_mod));
+	double alpha = acos(6371000.0 / r_con_mod);
 
 	if (gamma > alpha) {
 		return true;
-	}
-	else {
+	}else {
 		return false;
 	}
 }
@@ -289,7 +286,6 @@ GeneralProcessModel::GeneralProcessModel(double t0, double t1, double smlInc):TM
 	for (int i = ISZ_consumer_initIndex; i < _x0.getSize(); i++) {
 		_x0[i] = ISZ_consumer.getX0()[i-ISZ_consumer_initIndex];
 	}
-	std::cout << "X0: "; _x0.print();
 	setX0(_x0);
 	
 	

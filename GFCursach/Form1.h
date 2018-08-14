@@ -237,7 +237,7 @@ namespace CppCLR_WinformsProjekt {
 		for (int i = 0; i < model.GPS.getSatNumber(); i++)
 			fout << "Xgps_" << i << " " << "Ygps_" << i << " " << "Zgps_" << i << " " << "Vxgps_" << i << " " << "Vygps_" << i << " " << "Vzgps_" << i << " ";
 		//печать заголовка для ФФ
-		fout << "FF_ro FF_dro";
+		fout << "FF_ro FF_dro ";
 
 		//печать заголовков для спутника-потребителя
 		fout << "Xcon" << " " << "Ycon" << " " << "Zcon" << " " << "Vxcon" << " " << "Vycon" << " " << "Vzcon" << " " << "t"<<endl;

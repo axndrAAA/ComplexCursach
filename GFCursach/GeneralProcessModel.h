@@ -20,12 +20,15 @@ public:
 private:
 	int(*incProgressBar)() = nullptr;
 
+	//радиус Земли [км]
+	double EarthR = 6371000.0;
+
 	//параматры орбиты ИСЗ-потребителя
 	double Theta = Satellite::ToRad(60);
 	double omega = Satellite::ToRad(0);
 	double OMEGA = Satellite::ToRad(0);
 	double i = Satellite::ToRad(0);
-	double a = 500 * 1000;
+	double a = EarthR + 500 * 1000;
 	double e = Satellite::ToRad(0);
 
 	//параметы зашумления начальных услловй истинного движения спутников
@@ -66,10 +69,10 @@ private:
 	vector<NavSatellite> pullVectorToModel(const TVector &v,double t);
 
 	//процедуа получения навигационного созвездия
-	vector<NavSatellite> getBestConstellation(vector<NavSatellite> navSats);
+	vector<NavSatellite> getBestConstellation(const vector<NavSatellite> &navSats);
 
 	//поцедура проверки видимости нав. спутника
-	bool isVisble(Satellite conSat, NavSatellite nSat);
+	bool isVisble(const Satellite &conSat, const NavSatellite &nSat);
 	
 
 
