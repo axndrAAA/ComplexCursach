@@ -3,6 +3,21 @@
 #include"GaussianDistribution.h"
 
 
+WhiteNoiseGenerator::WhiteNoiseGenerator(double _T0, double _T1, double _tk, int _size) :WhiteNoiseGenerator(_T0, _T1, _tk)
+{
+	m = vector<double>(_size, 0.0);
+	sko = vector<double>(_size, 1.0);
+
+	//число "€чеек"
+	int size = (T1 - T0) / tk;
+	values = vector<TVector>(size + 2);
+
+	GaussianDistribution randomizer(m, sko);
+	for (int i = 0; i < values.size(); i++) {
+		values[i] = randomizer.getRndVectByDefaultParameters();
+	}
+}
+
 WhiteNoiseGenerator::WhiteNoiseGenerator(double _T0, double _T1, double _tk)
 {
 	T0 = _T0;
@@ -18,10 +33,10 @@ WhiteNoiseGenerator::WhiteNoiseGenerator(double _T0, double _T1, double _tk, vec
 	
 	//число "€чеек"
 	int size = (T1 - T0) / tk;
-	values = vector<TVector>(size);
+	values = vector<TVector>(size + 2);
 
 	GaussianDistribution randomizer(m, sko);
-	for (int i = 0; i < size; i++) {
+	for (int i = 0; i < values.size(); i++) {
 		values[i] = randomizer.getRndVectByDefaultParameters();
 	}
 

@@ -4,7 +4,7 @@
 #include"GLONASSsystem.h"
 #include"GPSSystem.h"
 #include"CalmanFilter.h"
-//#include"GausianExtention.h"
+#include"WhiteNoiseGenerator.h"
 #include<vector>
 class GeneralProcessModel: public TModel
 {
@@ -15,8 +15,7 @@ public:
 	CalmanFilter filter;
 
 	//TODO: это должны быть такие же генераторы, как и в прошлом курсаче
-	//GausianExtention wng_ro;
-	//GausianExtention wng_dro;
+	WhiteNoiseGenerator wng_ro_dro;
 
 private:
 	int(*incProgressBar)() = nullptr;

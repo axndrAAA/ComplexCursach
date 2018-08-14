@@ -148,6 +148,10 @@ GeneralProcessModel::GeneralProcessModel(double t0, double t1, double smlInc):TM
 		}
 	}
 
+	//создание генераторов БШ для имитации ошибок измеений псевдодальности и псевдоскорости
+	//БШ - N(0,1);
+	wng_ro_dro = WhiteNoiseGenerator(t0, t1, smlInc,2);
+
 	//далее идут два компонента от ДУ формирующего фильтра
 	_x0[GLONASS.getSatNumber() * 6 * 2] = m_cr_ion_ro;//для псевдодальности
 	_x0[GLONASS.getSatNumber() * 6 * 2 + 1] = m_sys_dro;//для псевдоскорости
@@ -208,9 +212,9 @@ TVector * GeneralProcessModel::getRight(const TVector & arg_v, double _t, TVecto
 
 	//два ДУ формирующего фильтра
 	k_i[GLONASS.getSatNumber() * 6 * 2] = -m_ro * arg_v[GLONASS.getSatNumber() * 6 * 2]
-		+ sqrt(2.0*sigma_ro*sigma_ro) * 1.0;// wng_ro.getW(_t);//для псевдодальности
-	k_i[GLONASS.getSatNumber() * 6 * 2 + 1] = -m_dro * arg_v[GLONASS.getSatNumber() * 6 * 2 + 1]
-		+ sqrt(2.0*sigma_ro*sigma_ro)*1.0;//wng_dro.getW(_t);//для псевдоскорости
+		+ sqrt(2.0*sigma_ro*sigma_ro) * wng_ro_dro.getVal(_t)[0];//для псевдодальности
+	k_i[GLONASS.getSatNumber() * 6 * 2 + 1] = -m_ro * arg_v[GLONASS.getSatNumber() * 6 * 2 + 1]
+		+ sqrt(2.0*sigma_dro*sigma_dro) * wng_ro_dro.getVal(_t)[1];//для псевдоскорости
 
 	//получение аргумента потребителя
 	TVector isz_consumer_args = getISZ_consumerArg(arg_v);
@@ -233,7 +237,9 @@ TVector * GeneralProcessModel::getRight(const TVector & arg_v, double _t, TVecto
 void GeneralProcessModel::AddResult(TVector & vect, double t)
 {
 	//здесь реализуем выбор рабочего созвездия, 
+
 	//измерения
+
 	//и шаг самого фильтра Кламана
 
 
