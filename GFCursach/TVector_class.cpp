@@ -2,68 +2,53 @@
 #include"stdafx.h"
 #include"Matrix_classes.h"
 #include"TQuaternion.h"
-#include"math.h"
-#include<exception>
+#include<vector>
 using namespace std;
 
 
 TVector::TVector(int i) {
-	size = i;
-	vector = new double[i];
-	for (int i = 0; i < size; i++)vector[i] = 0;
+	vect = vector<double>(i, 0.0);
 }
 
 TVector::~TVector() {
-	delete[] vector;
-	vector = NULL;
+	vect.clear();
 }
 
-TVector::TVector() {
-	size = 0;
-	vector = new double[size];
-}
+TVector::TVector():TVector(0){}
 
 TVector::TVector(const TVector &B) {
-	size = B.getSize();
-	vector = new double[size];
-	for (int i = 0; i < size; i++)vector[i] = B.vector[i];
+	vect = vector<double>(B.vect);
 }
 
 TVector::TVector(const double * arr, int _size)
 {
-	size = _size;
-	vector = new double[size];
-	for (int i = 0; i < size; i++)
+	vect = vector<double>(_size);
+	for (int i = 0; i < vect.size(); i++)
 	{
-		vector[i] = arr[i];
+		vect[i] = arr[i];
 	}
 }
 
 int TVector::getMinSize(TVector a, TVector b)const {
-	if (a.size > b.size)return b.size;
-	else return a.size;
+	if (a.vect.size() > b.vect.size())return b.vect.size();
+	else return a.vect.size();
 }
 
 std::vector<double> TVector::getStdVector()
 {
-	std::vector<double> ret(getSize());
-	for (size_t i = 0; i < ret.size(); i++)
-	{
-		ret[i] = vector[i];
-	}
-	return ret;
+	return vector<double>(vect);
 }
 
 TVector TVector::sub(int beg, int end)
 {
-	if (beg < 0 || beg > size || end < 0 || end > size)
+	if (beg < 0 || beg > vect.size() || end < 0 || end > vect.size())
 		return TVector();
 
 	TVector ret(end - beg);
 
 	for (size_t i = beg; i < end; i++)
 	{
-		ret[i - beg] = vector[i];
+		ret[i - beg] = vect[i];
 	}
 	
 	return ret;
@@ -74,9 +59,9 @@ TVector TVector::sub(int beg, int end)
 TQuaternion TVector::operator*(const TQuaternion &_quat)
 {
 	TVector this_vect_copy(3);
-	this_vect_copy[0] = vector[0];
-	this_vect_copy[1] = vector[1];
-	this_vect_copy[2] = vector[2];
+	this_vect_copy[0] = vect[0];
+	this_vect_copy[1] = vect[1];
+	this_vect_copy[2] = vect[2];
 	return TQuaternion(_quat.getsclr() - this_vect_copy *_quat.getvect(),this_vect_copy*_quat.getsclr() + this_vect_copy.crossProduct(_quat.getvect()));
 }
 
@@ -91,9 +76,9 @@ TVector TVector::RotateByRodrigFormula(TVector _e, double _phi) const
 	teta[2] = 2 * tan(_phi / 2.0)*e[2];
 
 	TVector this_vect_copy(3);
-	this_vect_copy[0] = vector[0];
-	this_vect_copy[1] = vector[1];
-	this_vect_copy[2] = vector[2];
+	this_vect_copy[0] = vect[0];
+	this_vect_copy[1] = vect[1];
+	this_vect_copy[2] = vect[2];
 	//return e*(e*this_vect_copy)*(1 - cos(_phi)) + e.crossProduct(this_vect_copy)*sin(_phi) + this_vect_copy*cos(_phi);
 	return TVector(this_vect_copy + (teta * (1.0 / (1+pow(tan(_phi/2),2)))).crossProduct(this_vect_copy + (teta * 0.5).crossProduct(this_vect_copy)) );
 }
@@ -101,40 +86,38 @@ TVector TVector::RotateByRodrigFormula(TVector _e, double _phi) const
 TVector TVector::RotateByQuaternion(const TQuaternion &_quat)
 {
 	TVector this_vect_copy(3);
-	this_vect_copy[0] = vector[0];
-	this_vect_copy[1] = vector[1];
-	this_vect_copy[2] = vector[2];
+	this_vect_copy[0] = vect[0];
+	this_vect_copy[1] = vect[1];
+	this_vect_copy[2] = vect[2];
 
-	TQuaternion vectQuat(0.0,vector[0],vector[1],vector[2]);// this_vect_copy
+	TQuaternion vectQuat(0.0, vect[0], vect[1], vect[2]);// this_vect_copy
 
 	return TQuaternion(_quat * (vectQuat *_quat.conj())).getvect();
 }
 
 TVector& TVector::operator =(const TVector& B) {
 	if (this == &B) return *this;
-	size = B.getSize();
-	delete[] vector;
-	vector = new double[size];
-	for (int i = 0; i < size; i++)vector[i] = B.vector[i];
+	vect.clear();
+	vect = vector<double>(B.vect);
 	return *this;
 
 }
 
 
 TVector TVector::operator+(const TVector& _v)const {
-	TVector buf(min(this->size,_v.getSize()));
-	for (int i = 0; i < buf.getSize(); i++)
+	TVector buf(min(vect.size(),_v.vect.size()));
+	for (int i = 0; i < buf.vect.size(); i++)
 		buf[i] = (*this)[i] + _v[i];
 	return buf;
 }
 
 TVector TVector::crossProduct(const TVector _v)const  {
-	if (size == 3 || _v.getSize() == 3) {
+	if (vect.size() == 3 || _v.vect.size() == 3) {
 		TVector result(3);
 
-		result[0] = vector[1] * _v[2] - vector[2] * _v[1];
-		result[1] = vector[2] * _v[0] - vector[0] * _v[2];
-		result[2] = vector[0] * _v[1] - vector[1] * _v[0];
+		result[0] = vect[1] * _v[2] - vect[2] * _v[1];
+		result[1] = vect[2] * _v[0] - vect[0] * _v[2];
+		result[2] = vect[0] * _v[1] - vect[1] * _v[0];
 		return result;
 
 	}
@@ -142,35 +125,36 @@ TVector TVector::crossProduct(const TVector _v)const  {
 }
 
 double& TVector::operator[](int i) {
-	if (i > size || i < 0) throw IncorrectIndexException();
-	return vector[i];
+	if (i > vect.size() || i < 0) throw IncorrectIndexException();
+	return vect[i];
 }
 
 double TVector::operator [](int i) const {
-	if (i > size || i < 0) throw IncorrectIndexException();
-	return vector[i];
+	if (i > vect.size() || i < 0) throw IncorrectIndexException();
+	return vect[i];
 }
 
 int TVector::getSize()const {
-	return size;
+	return vect.size();
 }
 
 double TVector::getMagnitude() const {
 	double res = 0;
-	for (int i = 0; i < size; i++)res += pow(vector[i], 2);
+	for (int i = 0; i < vect.size(); i++)res += pow(vect[i], 2);
 	return sqrt(res);
 }
 
 TVector TVector::operator*(const double &d)const {
-	TVector buf(size);
-	for (int i = 0; i < size; i++)buf[i] = vector[i] * d;
+	TVector buf(vect.size());
+	for (int i = 0; i < vect.size(); i++)
+		buf[i] = vect[i] * d;
 	return buf;
 }
 
 TVector TVector::operator/(const double &d) const
 {
-	TVector buf(size);
-	for (int i = 0; i < size; i++)buf[i] = vector[i] / d;
+	TVector buf(vect.size());
+	for (int i = 0; i < vect.size(); i++)buf[i] = vect[i] / d;
 	return buf;
 }
 
@@ -178,23 +162,23 @@ double TVector::operator*(const TVector& B)const {
 
 	double summ = 0;
 	for (int i = 0; i < getMinSize(*this, B); i++) {
-		summ += vector[i] * B.vector[i];
+		summ += vect[i] * B.vect[i];
 	}
 	return summ;
 }
 
 TVector TVector::operator*(const TMatrix& B) {
 	int lim_size = 0;
-	if (size >= B.getRowCount()) lim_size = B.getRowCount();
-	else lim_size = size;
+	if (vect.size() >= B.getRowCount()) lim_size = B.getRowCount();
+	else lim_size = vect.size();
 
 	TMatrix _B(B);
 
 	TVector buf(lim_size);
-	for (int k = 0; k < buf.getSize(); k++) {
+	for (int k = 0; k < buf.vect.size(); k++) {
 		double sum_el = 0;
 		for (int i = 0; i < lim_size; i++)
-			sum_el += vector[i] * _B[i][k];
+			sum_el += vect[i] * _B[i][k];
 		buf[k] = sum_el;
 		sum_el = 0;
 	}
@@ -202,22 +186,21 @@ TVector TVector::operator*(const TMatrix& B) {
 }
 
 void TVector::setElement(int i, double d) {
-	if (i < 0 || i > size)  throw IncorrectIndexException();
-	vector[i] = d;
+	if (i < 0 || i > vect.size())  throw IncorrectIndexException();
+	vect[i] = d;
 }
 
 void TVector::setLenght(int new_size) {
 	TVector buf(*this);
 
-	delete[] vector;
-	size = new_size;
-	vector = new double[new_size];
+	vect.clear();
+	vect = vector<double>(new_size);
 	int lim = 0;
-	if (size > new_size) lim = new_size;
+	if (vect.size() > new_size) lim = new_size;
 	else
 	{
-		lim = size;
+		lim = vect.size();
 	}
 	for (int i = 0; i < lim; i++)
-		vector[i] = buf[i];
+		vect[i] = buf[i];
 }

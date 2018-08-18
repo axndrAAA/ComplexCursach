@@ -384,17 +384,17 @@ void GeneralProcessModel::AddResult(TVector & vect, double t)
 {
 	/*делаем выгрузку данных и фазового вектора интегратора в классы в GPS и ГЛНАСС для удобства дальнейшей работы
 	и получаем список всех навигационных спутников*/
-	vector<NavSatellite> navSats = pullVectorToModel(vect,t);
+	//vector<NavSatellite> navSats = pullVectorToModel(vect,t);
 
-	//получение 4х спутников для измерений(выбор рабочего созвездия)
-	navSats = getBestConstellation(navSats);
+	////получение 4х спутников для измерений(выбор рабочего созвездия)
+	//navSats = getBestConstellation(navSats);
 
-	//измерения провидим здесь, т.к. из фазового вектора нужно вытащить еще две компоненты(здесь будем хитрить и выход формирующего фильтра будем подмешивать во все 4 псевдодальности)
-	TVector y = getY(ISZ_consumer, navSats, vect);
-	
+	////измерения провидим здесь, т.к. из фазового вектора нужно вытащить еще две компоненты(здесь будем хитрить и выход формирующего фильтра будем подмешивать во все 4 псевдодальности)
+	//TVector y = getY(ISZ_consumer, navSats, vect);
+	//
 
-	//шаг фильтра Кламана (измерения проводятся внутри)
-	filter.doStep(ISZ_consumer, navSats,t);
+	////шаг фильтра Кламана (измерения проводятся внутри)
+	//filter.doStep(ISZ_consumer, navSats,t);
 
 	//заглушка
 	TModel::AddResult(vect, t);

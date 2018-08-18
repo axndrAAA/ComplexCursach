@@ -2,14 +2,14 @@
 #include <string>
 #include<iostream>
 #include<vector>
+using namespace std;
 
 //раздебажено
 class TMatrix;
 class TQuaternion;
 class TVector {
 private:
-	int size;
-	double* vector;
+	vector<double> vect;
 
 public:	class IncorrectIndexException {};
 		class IncorrectSizeException {};
@@ -41,7 +41,7 @@ public:	 TVector(int);
 
 		 void print() {
 			 for (int i = 0; i < getSize(); i++)
-				 std::cout << vector[i] << " ";
+				 std::cout << vect[i] << " ";
 			 std::cout << std::endl;
 		 }
 
