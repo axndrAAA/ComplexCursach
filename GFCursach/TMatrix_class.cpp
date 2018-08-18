@@ -200,6 +200,16 @@ void TMatrix::setSize(int _i, int _j) {
 	//show(*this);
 }
 
+TMatrix TMatrix::getE_Matrix(int sz)
+{
+	TMatrix ret(sz, sz);
+	for (size_t i = 0; i < ret.getRowCount(); i++)
+	{
+		ret[i][i] = 1.0;
+	}
+	return ret;
+}
+
 TMatrix TMatrix::inverse() {
 	//Метод Гаусса
 	//создаем новую матрицу, приводим к квадратной

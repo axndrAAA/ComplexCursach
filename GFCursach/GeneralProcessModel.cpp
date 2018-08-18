@@ -394,7 +394,7 @@ void GeneralProcessModel::AddResult(TVector & vect, double t)
 	
 
 	//шаг фильтра Кламана (измерения проводятся внутри)
-	filter.doStep(ISZ_consumer, navSats,t);
+	filter.doStep(ISZ_consumer, navSats,y,t);
 
 	//заглушка
 	TModel::AddResult(vect, t);

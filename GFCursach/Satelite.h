@@ -5,8 +5,8 @@
 using namespace std;
 class Satellite
 {
+
 protected:
-	double mu = 398600.436e9;//геоцентрическая гравитационная постоянная;
 
 
 	TVector Xcur;
@@ -23,6 +23,10 @@ protected:
 	//double getVn(double Theta);
 	//double getVr(double Theta);
 public:
+	static double mu;//геоцентрическая гравитационная постоянная;
+
+
+
 	Satellite();
 	Satellite(TVector xo);//координаты в ГСК
 	Satellite(std::vector<double> _x0);//координаты в ГСК, собранные в std::vector

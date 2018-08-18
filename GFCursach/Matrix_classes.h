@@ -91,6 +91,7 @@ public:
 	void SetElement(int, int, double)  throw(IncorrectIndexException);
 	void setSize(int, int)  throw(IncorrectIndexException);
 
+	static TMatrix getE_Matrix(int sz);
 };
 //раздебежено
 class TSymmetricMatrix : public TMatrix {

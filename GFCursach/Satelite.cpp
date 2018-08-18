@@ -15,15 +15,16 @@
 
 Satellite::Satellite()
 {
+	Satellite::mu = 398600.436e9;
 }
 
-Satellite::Satellite(TVector x0)
+Satellite::Satellite(TVector x0):Satellite()
 {
 	this->X0 = TVector(x0);
 	this->Xcur = TVector(x0);
 }
 
-Satellite::Satellite(std::vector<double> _x0)
+Satellite::Satellite(std::vector<double> _x0):Satellite()
 {
 	X0 = TVector(6);
 	for (int i = 0; i < 6; i++) {
@@ -32,7 +33,7 @@ Satellite::Satellite(std::vector<double> _x0)
 	Xcur = TVector(X0);
 }
 
-Satellite::Satellite(double Theta, double omega, double OMEGA, double i, double a, double e)
+Satellite::Satellite(double Theta, double omega, double OMEGA, double i, double a, double e):Satellite()
 {
 	X0 = OsculToGeo(Theta, omega, OMEGA, i, a, e);
 	Xcur = X0;
