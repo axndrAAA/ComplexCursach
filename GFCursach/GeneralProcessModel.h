@@ -5,6 +5,7 @@
 #include"GPSSystem.h"
 #include"CalmanFilter.h"
 #include"WhiteNoiseGenerator.h"
+#include"GaussianDistribution.h"
 #include<vector>
 class GeneralProcessModel: public TModel
 {
@@ -14,8 +15,12 @@ public:
 	Satellite ISZ_consumer;
 	CalmanFilter filter;
 
-	//TODO: это должны быть такие же генераторы, как и в прошлом курсаче
+	// для имитации случайной аддитивной ошибки
 	WhiteNoiseGenerator wng_ro_dro;
+
+	//для имитации систематических ошибок(выдает вектор size = 4)
+	GaussianDistribution ro_delta_chr_ion_i;
+	GaussianDistribution dro_delta_chr_ion_i;
 
 private:
 	int(*incProgressBar)() = nullptr;
@@ -73,6 +78,9 @@ private:
 
 	//поцедура проверки видимости нав. спутника
 	bool isVisble(const Satellite &conSat, const NavSatellite &nSat);
+
+	//измерения
+	TVector getY(const Satellite &conSat, const vector<NavSatellite> &navSats, const TVector &X);
 	
 
 

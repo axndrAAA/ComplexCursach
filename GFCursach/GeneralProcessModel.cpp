@@ -238,6 +238,28 @@ bool GeneralProcessModel::isVisble(const Satellite &conSat, const NavSatellite &
 	}
 }
 
+TVector GeneralProcessModel::getY(const Satellite & conSat, const vector<NavSatellite>& navSats, const TVector & X)
+{
+	TVector ret(8);//включает 4 псеводальности и 4 псевдоскорости
+
+	vector<double> deltaro = ro_delta_chr_ion_i.getRndByDefaultParameters();
+	vector<double> ddeltaro = dro_delta_chr_ion_i.getRndByDefaultParameters();
+	//cout << X[288] << " " << X[289] << endl;
+	for (size_t i = 0; i < navSats.size(); i++)
+	{
+		TVector Xnav_Xcon = (navSats[i].getXcur() + conSat.getXcur()*(-1.0));
+		double ro = Xnav_Xcon.sub(0, 3).getMagnitude();
+		ro += deltaro[i] + X[288];//288 - индекс значения выхода ФФ для псевдодальности в фазовом векторе интегратора
+		
+		double dro = Xnav_Xcon.sub(3, 6).getMagnitude();
+		dro += ddeltaro[i] + X[289];//289 - индекс значения выхода ФФ для псевдоскорости в фазовом векторе интегратора
+
+		ret[i] = ro;
+		ret[i + 4] = dro;
+	}
+	return ret;
+}
+
 
 GeneralProcessModel::GeneralProcessModel()
 {
@@ -287,7 +309,14 @@ GeneralProcessModel::GeneralProcessModel(double t0, double t1, double smlInc):TM
 		_x0[i] = ISZ_consumer.getX0()[i-ISZ_consumer_initIndex];
 	}
 	setX0(_x0);
-	
+
+	//инициализация генеатоов шума для имитации 
+	//ro_delta_chr_ion_i - систематической ошибки измерения псевдодальности
+	//sigma = 0,  m = 0
+	ro_delta_chr_ion_i = GaussianDistribution(vector<double>(4, 0.0), vector<double>(4, 0.0));
+	//dro_delta_chr_ion_i - систематической ошибки измерения ПРОИЗВОДНОЙ псевдодальности
+	//sigma = 0,  m = 0
+	dro_delta_chr_ion_i = GaussianDistribution(vector<double>(4, 0.0), vector<double>(4, 0.0));
 	
 }
 
@@ -357,15 +386,15 @@ void GeneralProcessModel::AddResult(TVector & vect, double t)
 	и получаем список всех навигационных спутников*/
 	vector<NavSatellite> navSats = pullVectorToModel(vect,t);
 
-	//получение 4х спутников для измерений
+	//получение 4х спутников для измерений(выбор рабочего созвездия)
 	navSats = getBestConstellation(navSats);
 
-	//здесь реализуем выбор рабочего созвездия, 
+	//измерения провидим здесь, т.к. из фазового вектора нужно вытащить еще две компоненты(здесь будем хитрить и выход формирующего фильтра будем подмешивать во все 4 псевдодальности)
+	TVector y = getY(ISZ_consumer, navSats, vect);
+	
 
-	//измерения
-
-	//и шаг самого фильтра Кламана
-
+	//шаг фильтра Кламана (измерения проводятся внутри)
+	filter.doStep(ISZ_consumer, navSats,t);
 
 	//заглушка
 	TModel::AddResult(vect, t);
