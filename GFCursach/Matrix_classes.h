@@ -59,9 +59,12 @@ public:	 TVector(int);
 class TSymmetricMatrix;
 class TMatrix {
 protected:
-	int size_i;
-	int size_j;
-	TVector *matrix;
+	//int size_i;
+	//int size_j;
+	//TVector *matrix;
+
+	//массив строк i каждая размером j
+	vector<TVector> matrix;
 public:	class IncorrectIndexException {};
 		class IncorrectSizeException {};
 		class OtherException {};

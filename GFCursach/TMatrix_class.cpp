@@ -30,71 +30,67 @@ int min(int a, int b) {
 
 // определение класса TMatrix
 TMatrix::TMatrix() {
-	size_i = 0;
-	size_j = 0;
+	
 }
 
 TMatrix::TMatrix(int _i, int _j) {
-	size_i = _i;
-	size_j = _j;
-	matrix = new TVector[_i];
+
+	matrix = vector<TVector>(_i);
 	for (int i = 0; i < _i; i++) {
 		matrix[i] = TVector(_j);
 	}
 }
 
 TMatrix::~TMatrix() {
-	
-//	delete[] matrix;
-	matrix = NULL;
+	matrix.clear();
 }
 
 TMatrix::TMatrix(const TMatrix& B) {
 
-	size_i = B.size_i;
-	size_j = B.size_j;
+	matrix = vector<TVector>(B.matrix);
+	//matrix.size() = B.matrix.size();
+	//matrix[0].getSize() = B.matrix[0].getSize();
 
-	matrix = new TVector[size_i];
-	for (int i = 0; i < size_i; i++) {
-		matrix[i] = TVector(size_j);
-	}
-	for (int i = 0; i < size_i; i++)
-			matrix[i] = B[i];
+	//matrix = new TVector[matrix.size()];
+	//for (int i = 0; i < matrix.size(); i++) {
+	//	matrix[i] = TVector(matrix[0].getSize());
+	//}
+	//for (int i = 0; i < matrix.size(); i++)
+	//		matrix[i] = B[i];
 }
 
 TVector& TMatrix::operator [](int i) {
-	if ((i >= 0 && i<size_i))  return matrix[i];
+	if ((i >= 0 && i<matrix.size()))  return matrix[i];
 	else throw IncorrectIndexException();
 }
 
 TVector TMatrix::operator [](int i)const {
-	if ((i >= 0 && i<size_i))  return matrix[i];
+	if ((i >= 0 && i<matrix.size()))  return matrix[i];
 	else throw IncorrectIndexException();
 }
 
 TMatrix& TMatrix::operator =(const TMatrix& B) {
 
-	/*for (int i = 0; i < size_i; i++)
-		matrix[i].~TVector();*/
-	delete[] matrix;
 
-	this->size_i = B.size_i;
-	this->size_j = B.size_j;
+	matrix.clear();
+	matrix = vector<TVector>(B.matrix);
+	//this->matrix.size() = B.matrix.size();
+	//this->matrix[0].getSize() = B.matrix[0].getSize();
 
-	
-	matrix = new TVector[size_i];
-	for (int i = 0; i < size_i; i++) {
-		matrix[i] = TVector(size_j);
-	}
+	//
+	//matrix = new TVector[matrix.size()];
+	//for (int i = 0; i < matrix.size(); i++) {
+	//	matrix[i] = TVector(matrix[0].getSize());
+	//}
 
-	for (int i = 0; i < size_i; i++)
-			matrix[i] = B.matrix[i];
+	//for (int i = 0; i < matrix.size(); i++)
+	//		matrix[i] = B.matrix[i];
 	return *this;
 }
 
 TMatrix TMatrix::operator+(const TMatrix& B) {
-	int lim_i = min(size_i, B.getRowCount());
-	int lim_j = min(size_j, B.getColCount());
+	int lim_i = min(matrix.size(), B.getRowCount());
+	int lim_j = min(matrix.size(), B.getColCount());
 
 
 	TMatrix buf(lim_i, lim_j);
@@ -106,9 +102,9 @@ TMatrix TMatrix::operator+(const TMatrix& B) {
 }
 
 bool TMatrix::checkSymmetric() const {
-	if (size_i == size_j) {
-		for (int i = 0; i < size_i; i++)
-			for (int j = 0; j < size_j; j++)
+	if (matrix.size() == matrix[0].getSize()) {
+		for (int i = 0; i < matrix.size(); i++)
+			for (int j = 0; j < matrix[0].getSize(); j++)
 				if (matrix[i][j] != matrix[j][i]) return false;
 	}
 	else return false;
@@ -116,42 +112,42 @@ bool TMatrix::checkSymmetric() const {
 }
 
 TMatrix TMatrix::flip() {
-	TMatrix buf(size_j, size_i);
+	TMatrix buf(matrix[0].getSize(), matrix.size());
 
-	for (int i = 0; i < buf.size_i; i++)
-		for (int j = 0; j < buf.size_j; j++) {
+	for (int i = 0; i < buf.matrix.size(); i++)
+		for (int j = 0; j < buf.matrix[0].getSize(); j++) {
 			buf.matrix[i][j] = matrix[j][i];
 		}
 	return buf;
 }
 
 int TMatrix::getColCount() const {
-	return size_j;
+	return matrix[0].getSize();
 }
 
 int TMatrix::getRowCount() const {
-	return size_i;
+	return matrix.size();
 }
 
 TMatrix TMatrix::operator*(double d) {
 	TMatrix buf(*this);
 
-	for (int i = 0; i < size_i; i++)
+	for (int i = 0; i < matrix.size(); i++)
 			buf.matrix[i] = buf.matrix[i] * d;
 	return buf;
 }
 
 TMatrix TMatrix::operator*(const TMatrix& B) {
-	int lim_i = min(size_i, B.getRowCount());
-	int lim_j = min(size_j, B.getColCount());
+	int lim_i = min(matrix.size(), B.getRowCount());
+	int lim_j = min(matrix[0].getSize(), B.getColCount());
 
 
 	TMatrix buf(lim_i, lim_j);
 
-	for (int i = 0; i < buf.size_i; i++) {
-		for (int j = 0; j < buf.size_j; j++) {
+	for (int i = 0; i < buf.matrix.size(); i++) {
+		for (int j = 0; j < buf.matrix[0].getSize(); j++) {
 			double s = 0;
-			for (int inner = 0; inner < size_j; inner++) {
+			for (int inner = 0; inner < matrix[0].getSize(); inner++) {
 				s += matrix[i][inner] * B.matrix[inner][j];
 				buf[i][j] = s;
 			}
@@ -162,10 +158,10 @@ TMatrix TMatrix::operator*(const TMatrix& B) {
 
 TVector TMatrix::operator*(const TVector& v) {
 	int lim_i = 1;
-	int lim_j = min(size_j, v.getSize());
+	int lim_j = min(matrix[0].getSize(), v.getSize());
 
-	TVector buf(size_i);
-	for (int i = 0; i < size_i; i++) {
+	TVector buf(matrix.size());
+	for (int i = 0; i < matrix.size(); i++) {
 		double sum_el = 0;
 		for (int j = 0; j < lim_j; j++)
 			sum_el += matrix[i][j] * v[j];
@@ -183,23 +179,19 @@ void TMatrix::setSize(int _i, int _j) {
 
 	TMatrix buf(*this);
 
-	/*for (int i = 0; i < size_i; i++)
-		matrix[i].~TVector();*/
-	delete[] matrix;
+	matrix.clear();
 
-	size_i = _i;
-	size_j = _j;
-	matrix = new TVector[size_i];
-	for (int i = 0; i < size_i; i++) {
-		matrix[i] = TVector(size_j);
+	matrix = vector<TVector>(_i);
+	for (int i = 0; i < matrix.size(); i++) {
+		matrix[i] = TVector(_j);
 	}
 	
 	int lim_i;
 	int lim_j;
-	if (size_i >= buf.getRowCount()) lim_i = buf.getRowCount();
-	else lim_i = size_i;
-	if (size_j >= buf.getColCount()) lim_j = buf.getColCount();
-	else lim_j = size_j;
+	if (matrix.size() >= buf.getRowCount()) lim_i = buf.getRowCount();
+	else lim_i = matrix.size();
+	if (matrix[0].getSize() >= buf.getColCount()) lim_j = buf.getColCount();
+	else lim_j = matrix[0].getSize();
 
 	for (int i = 0; i < lim_i; i++)
 		for (int j = 0; j < lim_j; j++)
@@ -323,15 +315,15 @@ void  TSymmetricMatrix::setElement(int i, int j, double d) {
 TMatrix TSymmetricMatrix::inverse() {
 	//метод Xолецкого
 
-	TMatrix L(size_i, size_j);
+	TMatrix L(matrix.size(), matrix[0].getSize());
 	int i = 0;
-	for (int j = 0; j < size_j; j++) {
+	for (int j = 0; j < matrix[0].getSize(); j++) {
 		if (matrix[i][j]) {}
 		else {
-			for (int i1 = i + 1; i1 < size_i; i1++)
-				if (i1 != size_i) {
+			for (int i1 = i + 1; i1 < matrix.size(); i1++)
+				if (i1 != matrix.size()) {
 					if (matrix[i1][j]) {
-						for (int m = 0; m < size_j; m++) {
+						for (int m = 0; m < matrix[0].getSize(); m++) {
 							//temp(i, m) = temp(i, m) + temp(i1, m);
 							double tmp = matrix[i][m];
 							matrix[i][m] = matrix[i1][m];
@@ -342,7 +334,7 @@ TMatrix TSymmetricMatrix::inverse() {
 					else i1++;
 				}
 				else {
-					for (int m = 0; m < size_j; m++) {
+					for (int m = 0; m < matrix[0].getSize(); m++) {
 						//temp(i, m) = temp(i, m) + temp(i1 - 1, m);
 						double tmp = matrix[i][m];
 						matrix[i][m] = matrix[i1 - 1][m];
@@ -383,7 +375,7 @@ TMatrix TSymmetricMatrix::inverse() {
 
 
 	//show(L);
-	TMatrix returned(size_i, size_j);
+	TMatrix returned(matrix.size(), matrix[0].getSize());
 	//вычисление обратной матрицы
 
 	for (int i = returned.getRowCount() - 1; i >= 0; i--)
@@ -418,34 +410,29 @@ TMatrix TSymmetricMatrix::inverse() {
 }
 
 TSymmetricMatrix::TSymmetricMatrix() {
-	size_i = 0;
-	size_j = 0;
+	matrix = vector<TVector>(0);
 }
 
 TSymmetricMatrix::TSymmetricMatrix(int _i, int _j) {
 	int lim_ind = min(_i, _j);
-	size_i = lim_ind;
-	size_j = lim_ind;
-	
-	matrix = new TVector[size_i];
-	for (int i = 0; i < size_i; i++) {
-		matrix[i] = TVector(size_j);
+		
+	matrix = vector<TVector>(lim_ind);
+	for (int i = 0; i < matrix.size(); i++) {
+		matrix[i] = TVector(lim_ind);
 	}
 }
 
 TSymmetricMatrix::TSymmetricMatrix(const TMatrix& B) {
 	int min_size = min(B.getColCount(), B.getRowCount());
 
-	size_i = min_size;
-	size_j = min_size;
-
-	matrix = new TVector[size_i];
-	for (int i = 0; i < size_i; i++) {
-		matrix[i] = TVector(size_j);
+	
+	matrix = vector<TVector>(min_size);
+	for (int i = 0; i < matrix.size(); i++) {
+		matrix[i] = TVector(min_size);
 	}
 	int k = 0;
-	for (int i = 0; i < size_i; i++) {
-		for (int j = k; j < size_j; j++) {
+	for (int i = 0; i < matrix.size(); i++) {
+		for (int j = k; j < matrix[0].getSize(); j++) {
 			matrix[i][j] = B[i][j];
 			matrix[j][i] = B[i][j];
 		}
@@ -454,39 +441,25 @@ TSymmetricMatrix::TSymmetricMatrix(const TMatrix& B) {
 }
 
 TMatrix::TMatrix(const TSymmetricMatrix& B) {
-	size_i = B.size_i;
-	size_j = B.size_j;
 
-	matrix = new TVector[size_i];
-	for (int i = 0; i < size_i; i++) {
-		matrix[i] = TVector(size_j);
-	}
-
-	for (int i = 0; i < size_i; i++)		
-		matrix[i] = B.matrix[i];
+	matrix = vector<TVector>(B.matrix);
 }
 
 
 
 TSymmetricMatrix& TSymmetricMatrix::operator =(const TMatrix& B) throw(IncorrectIndexException) {
-	matrix = new TVector[size_i];
-	for (int i = 0; i < size_i; i++) {
-		matrix[i] = TVector(size_j);
-	}
+	
 
 	int lim_ind = min(B.getColCount(), B.getRowCount());
 
-	this->size_i = lim_ind;
-	this->size_j = lim_ind;
+	matrix = vector<TVector>(lim_ind);
 
-
-	matrix = new TVector[size_i];
-	for (int i = 0; i < size_i; i++) {
-		matrix[i] = TVector(size_j);
+	for (int i = 0; i < matrix.size(); i++) {
+		matrix[i] = TVector(lim_ind);
 	}
 	int k = 0;
-	for (int i = 0; i < size_i; i++) {
-		for (int j = k; j < size_j; j++) {
+	for (int i = 0; i < matrix.size(); i++) {
+		for (int j = k; j < matrix[0].getSize(); j++) {
 			matrix[i][j] = B[i][j];
 			matrix[j][i] = B[i][j];
 		}
